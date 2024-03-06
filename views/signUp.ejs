@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+    <link rel="stylesheet" href="/styles/header.css" />
+    <link rel="stylesheet" href="/styles/signupstyle.css" />
+  </head>
+  <body>
+    <%- include('includes/header')%>
+    <div class="container">
+      <div class="heading">
+        <h1>SignUp</h1>
+        <% if(inputData.hasError){ %>
+          <p id='input-error'><%= inputData.message %></p>
+        <% } %>
+      </div>
+      <form action="/signUp" method="POST"> 
+        <div class="line">
+          <div class="content1">
+            <label for="username">UserName</label><br />
+            <input type="text" id="username" name="username" value="<%=inputData.username %>" required />
+          </div>
+          <div class="content2">
+            <label for="email">Email</label><br />
+            <input type="email" id="email" name="email" value="<%=inputData.email %>" required />
+          </div>
+        </div>
+        <div class="line">
+          <div class="content1">
+            <label for="password">Password</label><br />
+            <input type="password" id="password" name="password" value="<%=inputData.password %>" required />
+          </div>
+          <div class="content2">
+            <label for="confirmpassword">Confirm Password</label><br />
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              value="<%=inputData.confirmPassword %>"
+              required
+            />
+          </div>
+        </div>
+        <div class="line">
+          <div class="content1">
+            <label for="Role">Role</label><br />
+            <select name="role" id="Role" value="<%=inputData.role %>" required>
+              <option value="" disabled selected>Select a Role</option>
+              <option value="admin">Admin</option>
+              <option value="hod">Head Of Department</option>
+              <option value="principal">Principal</option>
+              <option value="staff">Staff</option>
+            </select>
+          </div>
+          <div class="content3">
+            <button type="submit">SignUp</button>
+            <button type="reset">Reset</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
