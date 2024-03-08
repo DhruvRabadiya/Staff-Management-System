@@ -18,7 +18,7 @@
       <div class="heading">
         <h1>Contact Us</h1>
       </div>
-      <form action="">
+      <form action="/contactUs" method="POST">
         <label for="Name"
           ><span class="material-symbols-outlined"> perm_contact_calendar</span
           >Name</label
@@ -29,7 +29,7 @@
           placeholder="Enter Your Name"
           name="username"
         /><br />
-        <label for="Email" 
+        <label for="Email"
           ><span class="material-symbols-outlined">mail</span>Email</label
         >
         <input
@@ -38,17 +38,17 @@
           placeholder="Enter Your email"
           name="email"
         />
-        <label for="Message" >Message</label>
+        <label for="Message">Message</label>
         <textarea
-          name=""
+          name="message"
           id="Message"
           cols="30"
           rows="6"
           placeholder="Enter Your Message"
         ></textarea>
         <div class="buttonarea">
-          <button>Cancel</button>
-          <button>Send</button>
+          <button type="reset">Cancel</button>
+          <button type="submit">Send</button>
         </div>
       </form>
     </div>

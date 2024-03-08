@@ -47,6 +47,35 @@ app.get("/contactUs", function (req, res) {
   res.render("contactUs");
 });
 
+
+app.post("/contactUs", async function (req, res) {
+  const contactData = req.body;
+
+  const enteredUsername = contactData.username;
+  const enteredEmail = contactData.email;
+  const enteredMessage = contactData.message;
+  // Validate if the user exists in the database
+  const userExists = await db
+    .getDb()
+    .collection("users")
+    .findOne({ email: contactData.email });
+
+  if (!userExists) {
+    return res.status(400).send("User does not exist.");
+  }
+
+  const contactUsData = {
+    username: enteredUsername,
+    email: enteredEmail,
+    message: enteredMessage,
+  };
+
+  // Assuming you have a 'contactUs' collection
+  await db.getDb().collection("contactUs").insertOne(contactUsData);
+
+  res.redirect("/"); // Redirect to home or any other page after submission
+});
+
 app.get("/logIn", function (req, res) {
   let sessionInputData = req.session.inputData;
 
