@@ -30,6 +30,7 @@ app.use(
   })
 );
 
+
 app.get("/", function (req, res) {
   res.redirect("/index");
 });
@@ -47,7 +48,18 @@ app.get("/contactUs", function (req, res) {
 });
 
 app.get("/logIn", function (req, res) {
-  res.render("logIn");
+  let sessionInputData = req.session.inputData;
+
+  if (!sessionInputData) {
+    sessionInputData = {
+      hasError: false,
+      email: "",
+      password: "",
+      role: "",
+    };
+  }
+  req.session.inputData = null;
+  res.render("logIn", { inputData: sessionInputData });
 });
 
 app.get("/signUp", function (req, res) {
@@ -97,8 +109,17 @@ app.post("/logIn", async function (req, res) {
     .findOne({ email: enteredEmail, role: enteredRole });
 
   if (!existingUser) {
-    console.log("could not logIn !! - email or role does not match");
-    return res.redirect("/login");
+    req.session.inputData = {
+      hasError: true,
+      message: "Could not log you in - please check your input!",
+      email: enteredEmail,
+      password: entredPassword,
+      role: enteredRole,
+    };
+    req.session.save(function () {
+      res.redirect("/login");
+    });
+    return;
   }
 
   const passwordAreEqual = await bcrypt.compare(
@@ -107,8 +128,17 @@ app.post("/logIn", async function (req, res) {
   );
 
   if (!passwordAreEqual) {
-    console.log("could not logIn - Password does not match!!");
-    return res.redirect("/login");
+    req.session.inputData = {
+      hasError: true,
+      message: "Could not log you in -Password does not match!!",
+      email: enteredEmail,
+      password: entredPassword,
+      role: enteredRole,
+    };
+    req.session.save(function () {
+      res.redirect("/login");
+    });
+    return;
   }
 
   req.session.user = {
@@ -177,8 +207,19 @@ app.post("/signup", async function (req, res) {
     .findOne({ email: enteredEmail });
 
   if (existingUser) {
-    console.log("user exist already");
-    return res.redirect("/signup");
+    req.session.inputData = {
+      hasError: true,
+      message: "User exists already!",
+      username: enteredUsername,
+      email: enteredEmail,
+      password: entredPassword,
+      confirmPassword: enteredConfirmPassword,
+      role: enteredRole,
+    };
+    req.session.save(function () {
+      return res.redirect("/signup");
+    });
+    return;
   }
 
   const hashPassword = await bcrypt.hash(enteredConfirmPassword, 12);
