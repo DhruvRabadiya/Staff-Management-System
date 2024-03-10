@@ -1,0 +1,44 @@
+.content{
+    margin-top: 3vh;
+    display: flex;
+}
+h5{
+    color: #8E96A1;
+}
+a{
+    text-decoration: none;
+    color: white;
+    margin-left: 10px;
+}
+.menu{
+    background-color: #262D33;
+    color: white;
+    height: 117vh;
+    width: 20vw;
+
+}
+.topmenu i{
+    margin-left: 100px;
+    margin-top: 10px;
+    font-size: 20px;
+}
+.topmenu{
+    display: flex;
+}
+.logo i{ 
+  margin-top: 10vh;
+  margin-left: 6vw;
+  font-size: 100px;
+}
+.logo p{
+    margin-top: 30px;
+    margin-left: 6vw;
+}
+.para1{
+    margin-top: 25px;
+    margin-left: 20px;
+    display: flex;
+}
+.para2,.para3,.para4{
+    margin: 20px;
+}

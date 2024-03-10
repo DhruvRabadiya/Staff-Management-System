@@ -1,0 +1,142 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+.main{
+    display: flex;
+}
+.content{
+    margin-top: 3vh;
+    display: flex;
+}
+h5{
+    color: #8E96A1;
+}
+a{
+    text-decoration: none;
+    color: white;
+    margin-left: 10px;
+}
+.menu{
+    background-color: #262D33;
+    color: white;
+    height: 100%;
+    width: 20vw;
+}
+.topmenu i{
+    margin-left: 100px;
+    margin-top: 10px;
+    font-size: 20px;
+   
+}
+.topmenu{
+    display: flex;
+}
+.logo i{ 
+  margin-top: 10vh;
+  margin-left: 6vw;
+  font-size: 100px;
+}
+.logo p{
+    margin-top: 30px;
+    margin-left: 6vw;
+}
+.para1{
+    margin-top: 25px;
+    margin-left: 20px;
+    display: flex;
+}
+.para2,.para3,.para4{
+    margin: 20px;
+}
+.main-content{
+    flex: 1;
+    background-color:#1C2438;
+    color: white;
+}
+.header{
+    height: 30px;
+    display: flex;
+    margin-top: 10px;
+}
+.header i {
+    font-size: 25px;
+    color: white;
+}
+.header input{
+    margin-left: 10px;
+    height: 30px;
+    color: white;
+    background-color: #1C2438;
+}
+.heading{
+ margin: 20px  10px auto;
+}
+.heading p {
+    color: green;
+}
+.top-container{
+    margin:20px 70px ;
+    display: flex;
+}
+.container1{
+    background-color:rgb(50, 46, 66);
+    height: 20vh;
+    width: 20vw;
+}
+.container1 p{
+    font-size: 50px;
+    margin: 5px;
+}
+h3{
+    margin: 10px ;
+}
+.container2,.container3{
+    background-color:rgb(50, 46, 66);
+    margin-left: 20px;
+    height: 20vh;
+    width: 20vw;
+}
+.container2 p{
+    font-size: 50px;
+    margin: 2px;
+}
+.container3 p{
+    font-size: 50px;
+    margin: 5px;
+}
+.middle-container{
+    display: flex;
+}
+.container4{
+    background-color:rgb(50, 46, 66);
+    margin-left: 8%;
+    height: 30vh;
+    width: 42vw;
+}
+tr,th,td{
+    border: 2px solid white;
+    border-collapse: collapse;
+}
+.container5{
+    background-color:rgb(50, 46, 66);
+    margin-left: 10px;
+    height: 30vh;
+    width: 20vw;
+}
+.bottom-container{
+    display: flex;
+    margin: 20px 70px ;
+    
+}
+.container6{
+    background-color:rgb(50, 46, 66);
+    height: 30vh;
+    width: 20vw;
+}
+.container7{
+    background-color:rgb(50, 46, 66);
+    margin-left: 10px;
+    height: 30vh;
+    width: 42vw;
+}

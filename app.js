@@ -30,6 +30,8 @@ app.use(
   })
 );
 
+const adminRoutes = require("./routes/admin/adminRoutes");
+app.use("/admin", adminRoutes);
 
 app.get("/", function (req, res) {
   res.redirect("/index");
@@ -70,7 +72,6 @@ app.post("/contactUs", async function (req, res) {
     message: enteredMessage,
   };
 
-  // Assuming you have a 'contactUs' collection
   await db.getDb().collection("contactUs").insertOne(contactUsData);
 
   res.redirect("/"); // Redirect to home or any other page after submission
@@ -108,22 +109,26 @@ app.get("/signUp", function (req, res) {
   res.render("signup", { inputData: sessionInputData });
 });
 
-app.get("/admin", async function (req, res) {
-  if (!req.session.isAuthenticated) {
-    return res.status(401).render("401");
-  }
+// app.get("/admin", async function (req, res) {
+//   if (!req.session.isAuthenticated) {
+//     return res.status(401).render("401");
+//   }
 
-  const user = await db
-    .getDb()
-    .collection("users")
-    .findOne({ _id: req.session.user.id });
+//   const user = await db
+//     .getDb()
+//     .collection("users")
+//     .findOne({ _id: req.session.user.id });
 
-  if (!user || user.role !== "admin") {
-    return res.status(403).render("403");
-  }
-
-  res.render("admin");
-});
+//   if (!user || user.role !== "admin") {
+//     return res.status(403).render("403");
+//   }
+//   const staffCount = await db
+//     .getDb()
+//     .collection("users")
+//     .countDocuments({ role: "staff" }); 
+//     const adminName = user.username;
+//   res.render("admin", { staffCount ,adminName });
+// });
 
 app.post("/logIn", async function (req, res) {
   const userData = req.body;
@@ -178,7 +183,7 @@ app.post("/logIn", async function (req, res) {
   req.session.isAuthenticated = true;
   req.session.save(function () {
     if (existingUser.role == "admin") {
-      res.redirect("admin");
+      res.redirect("/admin/dashboard");
     } else if (existingUser.role == "hod") {
       res.redirect("admin");
     } else {
