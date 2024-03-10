@@ -33,6 +33,10 @@ app.use(
 const adminRoutes = require("./routes/admin/adminRoutes");
 app.use("/admin", adminRoutes);
 
+const staffRoutes = require("./routes/staff/staffRoutes");
+app.use("/staff", staffRoutes);
+
+
 app.get("/", function (req, res) {
   res.redirect("/index");
 });
@@ -184,10 +188,10 @@ app.post("/logIn", async function (req, res) {
   req.session.save(function () {
     if (existingUser.role == "admin") {
       res.redirect("/admin/dashboard");
-    } else if (existingUser.role == "hod") {
-      res.redirect("admin");
+    } else if (existingUser.role == "staff") {
+      res.redirect("/staff/dashboard");
     } else {
-      res.redirect("admin");
+      res.redirect("/index");
     }
   });
 
