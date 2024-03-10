@@ -138,21 +138,19 @@ app.post("/logIn", async function (req, res) {
   const userData = req.body;
 
   const enteredEmail = userData.email;
-  const entredPassword = userData.password;
-  const enteredRole = userData.role;
+  const enteredPassword = userData.password;
 
   const existingUser = await db
     .getDb()
     .collection("users")
-    .findOne({ email: enteredEmail, role: enteredRole });
+    .findOne({ email: enteredEmail });
 
   if (!existingUser) {
     req.session.inputData = {
       hasError: true,
       message: "Could not log you in - please check your input!",
       email: enteredEmail,
-      password: entredPassword,
-      role: enteredRole,
+      password: enteredPassword,
     };
     req.session.save(function () {
       res.redirect("/login");
@@ -161,17 +159,16 @@ app.post("/logIn", async function (req, res) {
   }
 
   const passwordAreEqual = await bcrypt.compare(
-    entredPassword,
+    enteredPassword,
     existingUser.password
   );
 
   if (!passwordAreEqual) {
     req.session.inputData = {
       hasError: true,
-      message: "Could not log you in -Password does not match!!",
+      message: "Could not log you in - Password does not match!",
       email: enteredEmail,
-      password: entredPassword,
-      role: enteredRole,
+      password: enteredPassword,
     };
     req.session.save(function () {
       res.redirect("/login");
@@ -182,19 +179,19 @@ app.post("/logIn", async function (req, res) {
   req.session.user = {
     id: existingUser._id,
     email: existingUser.email,
+    role: existingUser.role, // Store the user role in the session
   };
 
-  req.session.isAuthenticated = true;
+  req.session.user.isAuthenticated = true;
   req.session.save(function () {
-    if (existingUser.role == "admin") {
-      res.redirect("/admin/dashboard");
-    } else if (existingUser.role == "staff") {
-      res.redirect("/staff/dashboard");
+    if (existingUser.role === "admin") {
+      res.redirect("/admin/admin-dashboard");
+    } else if (existingUser.role === "staff") {
+      res.redirect("/staff/staff-dashboard");
     } else {
       res.redirect("/index");
     }
   });
-
   // const validRole = await db
   //   .getDb()
   //   .collection("users")
@@ -274,11 +271,12 @@ app.post("/signup", async function (req, res) {
 });
 
 app.post("/logout", function (req, res) {
-  req.session.user = null;
-  req.session.isAuthenticated = false;
+  const enteredRole = req.session.user.role;
+
+  req.session[enteredRole] = null;
+  req.session[enteredRole].isAuthenticated = false;
   res.redirect("/");
 });
-
 db.connectToDatabase().then(function () {
   app.listen(3000, function () {
     console.log("Server is running on 3000 Port");

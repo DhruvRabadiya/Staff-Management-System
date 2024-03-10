@@ -13,15 +13,15 @@ router.get("/staff-dashboard", async function (req, res) {
     .collection("users")
     .findOne({ _id: req.session.user.id });
 
-  if (!user || user.role !== "staff") {
+  if (!user || (user.role !== "staff" && user.role !== "admin")) {
     return res.status(403).render("403");
   }
-  const staffName = user.username;
 
-  res.render("staff/staff-dashboard", { staffName });
+  const userName = user.username;
+
+  res.render("staff/staff-dashboard", { userName });
 });
 
-// Add more routes for admin functionalities
-
+// Add more routes for staff functionalities
 
 module.exports = router;

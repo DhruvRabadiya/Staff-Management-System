@@ -3,8 +3,8 @@ const express = require("express");
 const router = express.Router();
 const db = require("../../data/database");
 
-router.get("/admin-dashboard",  async function (req, res) {
-if (!req.session.isAuthenticated) {
+router.get("/admin-dashboard", async function (req, res) {
+  if (!req.session.isAuthenticated) {
     return res.status(401).render("401");
   }
 
@@ -13,16 +13,17 @@ if (!req.session.isAuthenticated) {
     .collection("users")
     .findOne({ _id: req.session.user.id });
 
-  if (!user || user.role !== "admin") {
+  if (!user || (user.role !== "admin" && user.role !== "staff")) {
     return res.status(403).render("403");
   }
+
+  const adminName = user.username;
   const staffCount = await db
     .getDb()
     .collection("users")
-    .countDocuments({ role: "staff" }); 
-    const adminName = user.username;
+    .countDocuments({ role: "staff" });
 
-  res.render("admin/admin-dashboard" ,{ staffCount ,adminName });
+  res.render("admin/admin-dashboard", { staffCount, adminName });
 });
 
 router.get("/staff-member", async function (req, res) {
