@@ -113,27 +113,6 @@ app.get("/signUp", function (req, res) {
   res.render("signup", { inputData: sessionInputData });
 });
 
-// app.get("/admin", async function (req, res) {
-//   if (!req.session.isAuthenticated) {
-//     return res.status(401).render("401");
-//   }
-
-//   const user = await db
-//     .getDb()
-//     .collection("users")
-//     .findOne({ _id: req.session.user.id });
-
-//   if (!user || user.role !== "admin") {
-//     return res.status(403).render("403");
-//   }
-//   const staffCount = await db
-//     .getDb()
-//     .collection("users")
-//     .countDocuments({ role: "staff" }); 
-//     const adminName = user.username;
-//   res.render("admin", { staffCount ,adminName });
-// });
-
 app.post("/logIn", async function (req, res) {
   const userData = req.body;
 
@@ -192,16 +171,7 @@ app.post("/logIn", async function (req, res) {
       res.redirect("/index");
     }
   });
-  // const validRole = await db
-  //   .getDb()
-  //   .collection("users")
-  //   .findOne({ role: enteredRole , role:enteredRole });
-  // console.log("user Is Validated");
 
-  // if(!validRole){
-  //   console.log('could not logIn - role does not match')
-  //   res.redirect('/login')
-  // }
 });
 
 app.post("/signup", async function (req, res) {

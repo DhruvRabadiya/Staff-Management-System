@@ -1,28 +1,24 @@
-
 .header {
     height: 30px;
     display: flex;
+    margin-top: 10px;
 }
 
 .header i {
     font-size: 25px;
     color: white;
-    margin: 25px 5px;
+    margin: 4px 5px;
 }
 
 .header input {
-    margin: 20px 10px;
+    margin-left: 10px;
     height: 30px;
     color: white;
     background-color: #1C2438;
 }
 
 .heading {
-    display: flex;
-    margin: 40px 10px auto;
-}
-.heading-but{
-    margin: 25px 0px 0px 600px;
+    margin: 20px 10px auto;
 }
 
 .heading p {

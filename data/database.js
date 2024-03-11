@@ -8,7 +8,9 @@ async function connect() {
     const client = await MongoClient.connect("mongodb://localhost:27017");
     database = client.db("sms");
 
-    await database.createCollection("contactUs");
+    // Create collections for admin and staff
+    await database.createCollection("admin");
+    await database.createCollection("staff");
 
     console.log("Connected to the database");
   } catch (error) {
@@ -19,7 +21,7 @@ async function connect() {
 
 function getDb() {
   if (!database) {
-    throw { message: "Database connection not established!" };
+    throw new Error("Database connection not established!");
   }
   return database;
 }

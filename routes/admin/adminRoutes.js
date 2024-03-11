@@ -4,9 +4,9 @@ const router = express.Router();
 const db = require("../../data/database");
 
 router.get("/admin-dashboard", async function (req, res) {
-  if (!req.session.isAuthenticated) {
-    return res.status(401).render("401");
-  }
+  // if (!req.session.isAuthenticated) {
+  //   return res.status(401).render("401");
+  // }
 
   const user = await db
     .getDb()
@@ -27,18 +27,18 @@ router.get("/admin-dashboard", async function (req, res) {
 });
 
 router.get("/staff-member", async function (req, res) {
-  if (!req.session.isAuthenticated) {
-    return res.status(401).render("401");
-  }
+  // if (!req.session.isAuthenticated) {
+  //   return res.status(401).render("401");
+  // }
 
   const user = await db
     .getDb()
     .collection("users")
     .findOne({ _id: req.session.user.id });
 
-  if (!user || user.role !== "admin") {
-    return res.status(403).render("403");
-  }
+  // if (!user || user.role !== "admin") {
+  //   return res.status(403).render("403");
+  // }
   // Handle admin contact information functionality
   res.render("admin/staff-member");
 });

@@ -4,9 +4,9 @@ const router = express.Router();
 const db = require("../../data/database");
 
 router.get("/staff-dashboard", async function (req, res) {
-  if (!req.session.isAuthenticated) {
-    return res.status(401).render("401");
-  }
+  // if (!req.session.isAuthenticated) {
+  //   return res.status(401).render("401");
+  // }
 
   const user = await db
     .getDb()
@@ -21,7 +21,13 @@ router.get("/staff-dashboard", async function (req, res) {
 
   res.render("staff/staff-dashboard", { userName });
 });
+router.get("/staff-salary", async function (req, res) {
+  // if (!req.session.isAuthenticated) {
+  //   return res.status(401).render("401");
+  // }
 
+  res.render("staff/staff-salary");
+});
 // Add more routes for staff functionalities
 
 module.exports = router;
