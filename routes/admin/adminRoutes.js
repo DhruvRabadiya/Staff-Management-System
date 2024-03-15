@@ -45,5 +45,25 @@ router.get("/staff-member", async function (req, res) {
 
 // Add more routes for admin functionalities
 // ...
-
+router.get("/admin-contact", async function (req, res) {
+  res.render("admin/admin-contact");
+});
+router.get("/admin-achievement", async function (req, res) {
+  res.render("admin/admin-achievement");
+});
+router.get("/admin-attendance", async function (req, res) {
+  res.render("admin/admin-attendance");
+});
+router.get("/admin-leave", async function (req, res) {
+  res.render("admin/admin-leave");
+});
+router.get("/admin-createUser", async function (req, res) {
+  res.render("admin/admin-createUser");
+});
+router.get("/admin-event", async function (req, res) {
+  res.render("admin/admin-event");
+});
+router.get("/admin-salary", async function (req, res) {
+  res.render("admin/admin-salary");
+});
 module.exports = router;

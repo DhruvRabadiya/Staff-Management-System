@@ -11,14 +11,9 @@
     color: white;
     overflow: auto;
 }
-.container{
-   border: 2px;
-    margin:100px auto;
-    height:80vh;
-}
 table{
     padding: 20px;
-    margin: 40px auto;
+    margin: 100px auto;
 }
 th{
     background-color: rgb(27, 27, 90);

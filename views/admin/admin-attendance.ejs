@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <%- include('../includes/admin-head',{ title : "Attendance"})%>
+    <link rel="stylesheet" href="/styles/admin/AdminAttendance.css">
+</head>
+<body>
+    <div class="main">
+        <%- include('../includes/admin-aside') %>
+        <div class="main-content">
+        <%- include('../includes/admin-header', { title: 'Staff Attendance' , subTitle: 'Managing Staff Attendance' }) %>
+        <div class="container">
+            <div class="tablecontent">
+                <table>
+                    <tr>
+                        <th>ID</th>
+                        <th>Date</th>
+                        <th>Name</th>
+                        <TH>In Time</TH>
+                        <th>Out Time</th>
+                        <TH>Total Time</TH>
+                        <th>Status</th>
+                    </tr>
+                    <tr>
+                        <td id="same">1</td>
+                        <td id="same">1/2/24</td>
+                        <td>Tejas</td>
+                        <td id="same">9:00am</td>
+                        <td id="same">5:00pm</td>
+                        <td id="same">8hrs</td>
+                        <td>Present</td>
+                    </tr>
+                    <tr>
+                        <td id="same">2</td>
+                        <td id="same">1/2/24</td>
+                        <td>Priya</td>
+                        <td id="same"> -</td>
+                        <td id="same"> - </td>
+                        <td id="same">0hrs</td>
+                        <td>Absent</td>
+                    </tr>
+                    <tr>
+                        <td id="same">3</td>
+                        <td id="same">1/2/24</td>
+                        <td>Vikrant</td>
+                        <td id="same">9:05 am</td>
+                        <td id="same">5:05 pm</td>
+                        <td id="same">8 hrs </td>
+                        <td>Present</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+          </div>
+    </div>
+    
+</body>
+</html>

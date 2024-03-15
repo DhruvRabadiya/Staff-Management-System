@@ -1,0 +1,45 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+.main{
+    display: flex;
+}
+.main-content{
+    flex: 1;
+    background-color: #141A28;
+    color: white;
+    overflow: auto;
+}
+.container{
+     margin:100px auto;
+     height:80vh;
+ }
+ form{
+    margin: 0px 30px ;
+ }
+ form input,label{
+    margin-top: 30px;
+    font-size: 20px ;
+    background-color: #1C2438;
+ }
+ .name-container{
+    display: flex;
+ }
+ select,option{
+    margin-top: 30px;
+    font-size: 20px;
+    color: white;
+    background-color: #1C2438;
+ } 
+ #laname{
+    margin-left: 100px;
+ }
+ #belowbtn{
+    width: 80px;
+    height: 20px;
+    margin-top: 10px;
+}
+.gender{
+   display: flex;
+}

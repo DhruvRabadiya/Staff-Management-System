@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <%- include('../includes/admin-head',{ title : "Contacts"})%>
+    <link rel="stylesheet" href="/styles/admin/AdminContact.css">
+</head>
+<body>
+    <div class="main">
+        <%- include('../includes/admin-aside') %>
+        <div class="main-content">
+            <%- include('../includes/admin-header', { title: 'Contact' , subTitle: 'List of Contacts' }) %>
+            <div class="container">
+            <div class="tablecontent">
+                <table>
+                    <tr>
+                        <th>ID</th>
+                        <th>NAME</th>
+                        <TH>Emergency Number</TH>
+                        <th>Phone Number</th>
+                        <TH>E-mail</TH>
+                        <th>Address</th>
+                        <th>City</th>
+                    </tr>
+                    <tr>
+                        <td id="same">1</td>
+                        <td>Tejas</td>
+                        <td id="same">9824123454</td>
+                        <td id="same">9924875811</td>
+                        <td> tejas@gmail.com</td>
+                        <td>B-81 Vaibhav Park</td>
+                        <td>Ankleshwar</td>
+                    </tr>
+                    <tr>
+                        <td id="same">2</td>
+                        <td>Priya</td>
+                        <td id="same">9898998989</td>
+                        <td id="same">9727797277</td>
+                        <td>priya@gmail.com</td>
+                        <td>B-90 Patil Vilas</td>
+                        <td>Valod</td>
+                    </tr>
+                    <tr>
+                        <td id="same">3</td>
+                        <td>Vikrant</td>
+                        <td id="same">9832298322</td>
+                        <td id="same">7838987838</td>
+                        <td>vikrat@gmail.com</td>
+                        <td>B-82 RabaDiya Villa</td>
+                        <td>Surat</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

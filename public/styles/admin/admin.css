@@ -9,9 +9,10 @@
     flex: 1;
     background-color: #141A28;
     color: white;
+    overflow: auto;
 }
 .content-container{
-    margin: 10px;
+    margin-top: 20vh;
      height: 90vh;
 }
 .top-container{

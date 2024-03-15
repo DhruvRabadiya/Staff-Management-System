@@ -28,6 +28,31 @@ router.get("/staff-salary", async function (req, res) {
 
   res.render("staff/staff-salary");
 });
+router.get("/staff-profile", async function (req, res) {
+
+  res.render("staff/staff-profile");
+});
+
+router.get("/staff-updprof", async function (req, res) {
+  res.render("staff/staff-updprof");
+});
+router.get("/staff-ach", async function (req, res) {
+  res.render("staff/staff-ach");
+});
+router.get("/staff-achadd", async function (req, res) {
+  res.render("staff/staff-achadd");
+});
+
+router.get("/staff-leave", async function (req, res) {
+  res.render("staff/staff-leave");
+});
+
+router.get("/staff-leaveapply", async function (req, res) {
+  res.render("staff/staff-leaveapply");
+});
+router.get("/staff-salary", async function (req, res) {
+  res.render("staff/staff-salary");
+});
 // Add more routes for staff functionalities
 
 module.exports = router;

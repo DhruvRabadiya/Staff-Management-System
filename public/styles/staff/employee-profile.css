@@ -1,0 +1,41 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+.heading{
+    display: flex;
+}
+.heading img{
+    margin-left: 225px;
+}
+.main-content {
+    flex: 1;
+    background-color: #141A28;
+    color: white;
+    height: 135vh;
+}
+#address{
+    width: auto;
+}
+.container input {
+    margin-top: 30px;
+    margin-left: 22px;
+    height: 30px;
+    width: 440px;
+    color: white;
+    background-color: #1C2438;
+}
+
+.leavebtn{
+    border-radius: 10px;
+    text-align: center;
+    background-color: white;
+    width: 168px;
+    height: 20px;
+    margin-top: 80px;
+    margin-left: 740px;
+}
+.leavebtn a{
+    margin-right: 7px;
+    color: rgba(56, 59, 139, 1);
+}

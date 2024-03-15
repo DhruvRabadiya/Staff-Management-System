@@ -11,14 +11,10 @@
     color: white;
     overflow: auto;
 }
-.container{
-   border: 2px;
-    margin:100px auto;
-    height:80vh;
-}
 table{
-    padding: 20px;
-    margin: 40px auto;
+    padding: 10px;
+    margin: 90px auto;
+    overflow: auto;
 }
 th{
     background-color: rgb(27, 27, 90);
@@ -27,7 +23,7 @@ th{
     border: 2px solid white;
 }
 #same{
-    padding-left: 50px;
+    padding-left: 20px;
 }
 td{
     border-collapse: collapse;
@@ -35,4 +31,9 @@ td{
     border-right: 2px solid white;
     border-bottom: 2px solid white;
     padding: 10px;
+}
+#mybtn{
+    border-radius: 5px;
+    border: 2px solid green;
+   width: 50px;
 }

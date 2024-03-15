@@ -2,74 +2,9 @@
     margin: 0px;
     padding: 0px;
 }
-
-.main {
-    display: flex;
+.main-content{
+    height: 100vh;
 }
-
-.content {
-    margin-top: 3vh;
-    display: flex;
-}
-
-h5 {
-    color: #8E96A1;
-}
-
-a {
-    text-decoration: none;
-    color: white;
-    margin-left: 10px;
-}
-
-.menu {
-    background-color: rgba(27, 37, 55, 1);
-    color: white;
-    height: 115vhs;
-    width: 20vw;
-}
-
-.topmenu i {
-    margin-left: 80px;
-    margin-top: 10px;
-    font-size: 20px;
-
-}
-
-.topmenu {
-    display: flex;
-}
-
-.logo i {
-    margin-top: 10vh;
-    margin-left: 6vw;
-    font-size: 100px;
-}
-
-.logo p {
-    margin-top: 30px;
-    margin-left: 5vw;
-}
-
-.para1 {
-    margin-top: 25px;
-    margin-left: 20px;
-    display: flex;
-}
-
-.para2,
-.para3,
-.para4 {
-    margin: 20px;
-}
-
-.main-content {
-    flex: 1;
-    background-color: #141A28;
-    color: white;
-}
-
-
 .top-container {
     margin: 20px 70px;
     display: flex;
@@ -77,13 +12,16 @@ a {
 
 .container1 {
     background-color: rgba(27, 37, 55, 1);
-    height: 20vh;
-    width: 20vw;
+    height: 50vh;
+    width: 22vw;
 }
 
 .container1 p {
-    font-size: 50px;
-    margin: 5px;
+    font-size: 30px;
+    margin: 10px;
+}
+#container-ach{
+    font-size: 20px;
 }
 
 h3 {
@@ -94,60 +32,16 @@ h3 {
 .container3 {
     background-color: rgba(27, 37, 55, 1);
     margin-left: 20px;
-    height: 20vh;
-    width: 20vw;
+    height: 50vh;
+    width: 22vw;
 }
 
 .container2 p {
-    font-size: 50px;
-    margin: 2px;
+    font-size: 30px;
+    margin: 10px;
 }
 
 .container3 p {
-    font-size: 50px;
-    margin: 5px;
-}
-
-.middle-container {
-    display: flex;
-}
-
-.container4 {
-    background-color: rgba(27, 37, 55, 1);
-    margin-left: 70px;
-    height: 30vh;
-    width: 42vw;
-}
-
-tr,
-th,
-td {
-    border: 2px solid white;
-    border-collapse: collapse;
-}
-
-.container5 {
-    background-color: rgba(27, 37, 55, 1);
-    margin-left: 15px;
-    height: 30vh;
-    width: 20vw;
-}
-
-.bottom-container {
-    display: flex;
-    margin: 20px 70px;
-
-}
-
-.container6 {
-    background-color: rgba(27, 37, 55, 1);
-    height: 30vh;
-    width: 20vw;
-}
-
-.container7 {
-    background-color: rgba(27, 37, 55, 1);
-    margin-left: 15px;
-    height: 30vh;
-    width: 42vw;
+    font-size: 30px;
+    margin: 10px;
 }
