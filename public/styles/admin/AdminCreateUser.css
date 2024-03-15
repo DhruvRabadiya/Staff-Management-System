@@ -9,11 +9,11 @@
     flex: 1;
     background-color: #141A28;
     color: white;
-    overflow: auto;
+    height: auto;
 }
 .container{
      margin:100px auto;
-     height:80vh;
+     height:auto;
  }
  form{
     margin: 0px 30px ;

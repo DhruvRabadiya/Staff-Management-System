@@ -9,12 +9,11 @@
     flex: 1;
     background-color: #141A28;
     color: white;
-    overflow: auto;
+    height: auto;
 }
 table{
     padding: 10px;
     margin: 90px auto;
-    overflow: auto;
 }
 th{
     background-color: rgb(27, 27, 90);

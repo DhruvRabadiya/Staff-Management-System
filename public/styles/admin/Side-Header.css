@@ -13,7 +13,7 @@ a{
 .menu{
     background-color: rgba(27, 37, 55, 1);
     color: white;
-    height: 119vh;
+    height: auto;
     width: 19vw;
     /* position: fixed; */
 }

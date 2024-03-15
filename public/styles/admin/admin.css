@@ -9,11 +9,11 @@
     flex: 1;
     background-color: #141A28;
     color: white;
-    overflow: auto;
+    height: auto;
 }
 .content-container{
     margin-top: 20vh;
-     height: 90vh;
+    height: auto;
 }
 .top-container{
     margin:20px 20px ;

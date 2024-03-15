@@ -9,12 +9,12 @@
     flex: 1;
     background-color: #141A28;
     color: white;
-    overflow: auto;
+    height: auto;
 }
 .container{
    border: 2px;
     margin:100px auto;
-    height:80vh;
+    height:auto;
 }
 table{
     padding: 20px;
