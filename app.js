@@ -36,6 +36,11 @@ app.use("/admin", adminRoutes);
 const staffRoutes = require("./routes/staff/staffRoutes");
 app.use("/staff", staffRoutes);
 
+const principalRoutes = require("./routes/principal/principalRoutes");
+app.use("/principal", principalRoutes); 
+
+const hodRoutes = require("./routes/hod/hodRoutes")
+app.use('/hod' ,hodRoutes)
 
 app.get("/", function (req, res) {
   res.redirect("/index");
@@ -167,6 +172,10 @@ app.post("/logIn", async function (req, res) {
       res.redirect("/admin/admin-dashboard");
     } else if (existingUser.role === "staff") {
       res.redirect("/staff/staff-dashboard");
+    } else if (existingUser.role === "principal") {
+      res.redirect("/principal/principal-dashboard");
+    } else if (existingUser.role === "hod") {
+      res.redirect("/hod/hod-dashboard");
     } else {
       res.redirect("/index");
     }

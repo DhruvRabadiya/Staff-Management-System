@@ -1,0 +1,28 @@
+.header{
+    height: 20px;
+    margin-top: 10px;
+}
+.header i{
+    margin-left: 10px;
+    font-size: 25px;
+    color: white;
+}
+.header input{
+    margin-left: 10px;
+    height: 30px;
+    color: white;
+    background-color: #1C2438;
+}
+.header button{
+    margin-left: 55vw;
+}
+.heading{
+     margin: 30px  20px auto;
+   }
+.heading p {
+  color: green;
+}
+.headerandheading{
+    height:30vh;
+    background-color: red;
+}

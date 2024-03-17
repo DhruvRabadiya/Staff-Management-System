@@ -1,0 +1,37 @@
+.main-content {
+    flex: 1;
+    background-color: #141A28;
+    color: white;
+}
+
+.header {
+    height: 30px;
+    display: flex;
+}
+
+.header i {
+    font-size: 25px;
+    color: white;
+    margin-left: 5px;
+    margin-top: 25px;
+}
+
+.header input {
+    margin-top: 20px;
+    margin-left: 10px;
+    height: 30px;
+    color: white;
+    background-color: #1C2438;
+}
+
+.heading {
+    margin: 40px 10px auto;
+}
+.heading-but{
+    margin-top: 40px;
+    margin-left: 680px;
+}
+
+.heading p {
+    color: green;
+}
