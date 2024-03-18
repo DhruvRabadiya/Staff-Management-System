@@ -29,7 +29,6 @@ router.get("/staff-salary", async function (req, res) {
   res.render("staff/staff-salary");
 });
 router.get("/staff-profile", async function (req, res) {
-
   res.render("staff/staff-profile");
 });
 
@@ -49,6 +48,9 @@ router.get("/staff-leave", async function (req, res) {
 
 router.get("/staff-leaveapply", async function (req, res) {
   res.render("staff/staff-leaveapply");
+});
+router.get("/staff-event", async function (req, res) {
+  res.render("staff/staff-event");
 });
 router.get("/staff-salary", async function (req, res) {
   res.render("staff/staff-salary");

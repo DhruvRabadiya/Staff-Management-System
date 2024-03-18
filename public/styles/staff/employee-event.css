@@ -29,21 +29,8 @@ td {
 .bottom {
     background-color: rgba(56, 59, 139, 1);
     height: 6vh;
-    width: 77.4vw;
+    width: 76vw;
     margin-left: 22px;
-    margin-top: 180px;
+    margin-top: 340px;
     margin-bottom: 30px;
-}
-.leavebtn{
-    border-radius: 10px;
-    text-align: center;
-    background-color: white;
-    width: 150px;
-    height: 20px;
-    margin-top: 80px;
-    margin-left: 770px;
-}
-.leavebtn a{
-    margin-right: 7px;
-    color: rgba(56, 59, 139, 1);
 }
