@@ -1,34 +1,16 @@
 const path = require("path");
 const express = require("express");
-const session = require("express-session");
+
 const bcrypt = require("bcryptjs");
-const mongodbStore = require("connect-mongodb-session");
-
 const app = express();
+
 const db = require("./data/database");
-
-const MongoDBStore = mongodbStore(session);
-
-const sessionStore = new MongoDBStore({
-  uri: "mongodb://localhost:27017",
-  databaseName: "sms",
-  collection: "sessions",
-});
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static("public"));
 
 app.use(express.urlencoded({ extended: false }));
-
-app.use(
-  session({
-    secret: "super-secret",
-    resave: false,
-    saveUninitialized: false,
-    store: sessionStore,
-  })
-);
 
 const adminRoutes = require("./routes/admin/adminRoutes");
 app.use("/admin", adminRoutes);
@@ -37,10 +19,10 @@ const staffRoutes = require("./routes/staff/staffRoutes");
 app.use("/staff", staffRoutes);
 
 const principalRoutes = require("./routes/principal/principalRoutes");
-app.use("/principal", principalRoutes); 
+app.use("/principal", principalRoutes);
 
-const hodRoutes = require("./routes/hod/hodRoutes")
-app.use('/hod' ,hodRoutes)
+const hodRoutes = require("./routes/hod/hodRoutes");
+app.use("/hod", hodRoutes);
 
 app.get("/", function (req, res) {
   res.redirect("/index");
@@ -57,135 +39,15 @@ app.get("/aboutUs", function (req, res) {
 app.get("/contactUs", function (req, res) {
   res.render("contactUs");
 });
-
-
-app.post("/contactUs", async function (req, res) {
-  const contactData = req.body;
-
-  const enteredUsername = contactData.username;
-  const enteredEmail = contactData.email;
-  const enteredMessage = contactData.message;
-  // Validate if the user exists in the database
-  const userExists = await db
-    .getDb()
-    .collection("users")
-    .findOne({ email: contactData.email });
-
-  if (!userExists) {
-    return res.status(400).send("User does not exist.");
-  }
-
-  const contactUsData = {
-    username: enteredUsername,
-    email: enteredEmail,
-    message: enteredMessage,
-  };
-
-  await db.getDb().collection("contactUs").insertOne(contactUsData);
-
-  res.redirect("/"); // Redirect to home or any other page after submission
-});
-
 app.get("/logIn", function (req, res) {
-  let sessionInputData = req.session.inputData;
-
-  if (!sessionInputData) {
-    sessionInputData = {
-      hasError: false,
-      email: "",
-      password: "",
-      role: "",
-    };
-  }
-  req.session.inputData = null;
-  res.render("logIn", { inputData: sessionInputData });
+  res.render("logIn");
 });
-
-app.get("/signUp", function (req, res) {
-  let sessionInputData = req.session.inputData;
-
-  if (!sessionInputData) {
-    sessionInputData = {
-      hasError: false,
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      role: "",
-    };
-  }
-  req.session.inputData = null;
-  res.render("signup", { inputData: sessionInputData });
-});
-
-app.post("/logIn", async function (req, res) {
-  const userData = req.body;
-
-  const enteredEmail = userData.email;
-  const enteredPassword = userData.password;
-
-  const existingUser = await db
-    .getDb()
-    .collection("users")
-    .findOne({ email: enteredEmail });
-
-  if (!existingUser) {
-    req.session.inputData = {
-      hasError: true,
-      message: "Could not log you in - please check your input!",
-      email: enteredEmail,
-      password: enteredPassword,
-    };
-    req.session.save(function () {
-      res.redirect("/login");
-    });
-    return;
-  }
-
-  const passwordAreEqual = await bcrypt.compare(
-    enteredPassword,
-    existingUser.password
-  );
-
-  if (!passwordAreEqual) {
-    req.session.inputData = {
-      hasError: true,
-      message: "Could not log you in - Password does not match!",
-      email: enteredEmail,
-      password: enteredPassword,
-    };
-    req.session.save(function () {
-      res.redirect("/login");
-    });
-    return;
-  }
-
-  req.session.user = {
-    id: existingUser._id,
-    email: existingUser.email,
-    role: existingUser.role, // Store the user role in the session
-  };
-
-  req.session.user.isAuthenticated = true;
-  req.session.save(function () {
-    if (existingUser.role === "admin") {
-      res.redirect("/admin/admin-dashboard");
-    } else if (existingUser.role === "staff") {
-      res.redirect("/staff/staff-dashboard");
-    } else if (existingUser.role === "principal") {
-      res.redirect("/principal/principal-dashboard");
-    } else if (existingUser.role === "hod") {
-      res.redirect("/hod/hod-dashboard");
-    } else {
-      res.redirect("/index");
-    }
-  });
-
+app.get("/signup", function (req, res) {
+  res.render("signup");
 });
 
 app.post("/signup", async function (req, res) {
   const userData = req.body;
-
   const enteredUsername = userData.username;
   const enteredEmail = userData.email;
   const entredPassword = userData.password;
@@ -201,42 +63,20 @@ app.post("/signup", async function (req, res) {
     entredPassword.trim() !== enteredConfirmPassword.trim() ||
     !enteredEmail.includes("@")
   ) {
-    req.session.inputData = {
-      hasError: true,
-      message: "Invalid Input- please check your data.",
-      username: enteredUsername,
-      email: enteredEmail,
-      password: entredPassword,
-      confirmPassword: enteredConfirmPassword,
-      role: enteredRole,
-    };
-    req.session.save(function () {
-      res.redirect("/signup");
-    });
-    return;
+    console.log("Invalid Input- please check your data.");
   }
+
   const existingUser = await db
     .getDb()
     .collection("users")
     .findOne({ email: enteredEmail });
 
   if (existingUser) {
-    req.session.inputData = {
-      hasError: true,
-      message: "User exists already!",
-      username: enteredUsername,
-      email: enteredEmail,
-      password: entredPassword,
-      confirmPassword: enteredConfirmPassword,
-      role: enteredRole,
-    };
-    req.session.save(function () {
-      return res.redirect("/signup");
-    });
-    return;
+    console.log("User exists already!");
+    return res.status(400).send("User already exists");
   }
 
-  const hashPassword = await bcrypt.hash(enteredConfirmPassword, 12);
+  const hashPassword = await bcrypt.hash(entredPassword, 12);
 
   const user = {
     username: enteredUsername,
@@ -246,16 +86,75 @@ app.post("/signup", async function (req, res) {
   };
 
   await db.getDb().collection("users").insertOne(user);
-  res.redirect("/logIn");
+
+  res.redirect("/login");
+});
+app.post("/logIn", async function (req, res) {
+  const { email, password, role } = req.body;
+
+  
+  const DbName = getDbName(role);
+  try {
+    const existingUser = await db.getDb().collection(DbName).findOne({ email });
+
+    if (!existingUser) {
+      console.log("User not found!");
+      return res.status(400).send("User not found");
+    }
+
+    const passwordAreEqual = await bcrypt.compare(
+      password,
+      existingUser.password
+    );
+    if (!passwordAreEqual) {
+      console.log("Invalid password!");
+      return res.status(400).send("Invalid password");
+    }
+
+    if (existingUser.role !== role) {
+      console.log("Role does not match!");
+      return res.status(400).send("Role does not match");
+    }
+
+    switch (existingUser.role) {
+      case "admin":
+        res.redirect("/admin/admin-dashboard");
+        break;
+      case "staff":
+        res.redirect("/staff/staff-dashboard");
+        break;
+      case "principal":
+        res.redirect("/principal/principal-dashboard");
+        break;
+      case "hod":
+        res.redirect("/hod/hod-dashboard");
+        break;
+      default:
+        res.redirect("/index");
+        break;
+    }
+  } catch (error) {
+    console.error("Error authenticating user:", error);
+    res.status(500).send("Internal server error");
+  }
 });
 
-app.post("/logout", function (req, res) {
-  const enteredRole = req.session.user.role;
+function getDbName(role) {
+  let dbName;
+  if (role == "admin") {
+    dbName = "users";
+  } else if (role == "principal") {
+    dbName = "Principal";
+  } else if (role == "hod") {
+    dbName = "HODs";
+  } else if (role == "staff") {
+    dbName = "StaffMembers";
+  } else {
+    throw new Error("Role Does not Exist");
+  }
+  return dbName;
+}
 
-  req.session[enteredRole] = null;
-  req.session[enteredRole].isAuthenticated = false;
-  res.redirect("/");
-});
 db.connectToDatabase().then(function () {
   app.listen(3000, function () {
     console.log("Server is running on 3000 Port");

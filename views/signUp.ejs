@@ -16,25 +16,23 @@
     <div class="container">
       <div class="heading">
         <h1>SignUp</h1>
-        <% if(inputData.hasError){ %>
-          <p id='input-error'><%= inputData.message %></p>
-        <% } %>
+        
       </div>
       <form action="/signUp" method="POST"> 
         <div class="line">
           <div class="content1">
             <label for="username">UserName</label><br />
-            <input type="text" id="username" name="username" value="<%=inputData.username %>" required />
+            <input type="text" id="username" name="username"  required />
           </div>
           <div class="content2">
             <label for="email">Email</label><br />
-            <input type="email" id="email" name="email" value="<%=inputData.email %>" required />
+            <input type="email" id="email" name="email"  required />
           </div>
         </div>
         <div class="line">
           <div class="content1">
             <label for="password">Password</label><br />
-            <input type="password" id="password" name="password" value="<%=inputData.password %>" required />
+            <input type="password" id="password" name="password"  required />
           </div>
           <div class="content2">
             <label for="confirmpassword">Confirm Password</label><br />
@@ -42,7 +40,7 @@
               type="password"
               id="confirmPassword"
               name="confirmPassword"
-              value="<%=inputData.confirmPassword %>"
+              
               required
             />
           </div>
@@ -50,12 +48,9 @@
         <div class="line">
           <div class="content1">
             <label for="Role">Role</label><br />
-            <select name="role" id="Role" value="<%=inputData.role %>" required>
+            <select name="role" id="Role" required>
               <option value="" disabled selected>Select a Role</option>
               <option value="admin">Admin</option>
-              <option value="hod">Head Of Department</option>
-              <option value="principal">Principal</option>
-              <option value="staff">Staff</option>
             </select>
           </div>
           <div class="content3">

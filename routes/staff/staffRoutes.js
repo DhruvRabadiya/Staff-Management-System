@@ -8,18 +8,18 @@ router.get("/staff-dashboard", async function (req, res) {
   //   return res.status(401).render("401");
   // }
 
-  const user = await db
-    .getDb()
-    .collection("users")
-    .findOne({ _id: req.session.user.id });
+  // const user = await db
+  //   .getDb()
+  //   .collection("users")
+  //   .findOne({ _id: req.session.user.id });
 
-  if (!user || (user.role !== "staff" && user.role !== "admin")) {
-    return res.status(403).render("403");
-  }
+  // if (!user || (user.role !== "staff" && user.role !== "admin")) {
+  //   return res.status(403).render("403");
+  // }
 
-  const userName = user.username;
+  // const userName = user.username;
 
-  res.render("staff/staff-dashboard", { userName });
+  res.render("staff/staff-dashboard");
 });
 router.get("/staff-salary", async function (req, res) {
   // if (!req.session.isAuthenticated) {

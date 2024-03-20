@@ -17,24 +17,22 @@
     <div class="container">
       <div class="heading">
         <h1>LogIn</h1>
-        <% if(inputData.hasError){ %>
-          <p id='input-error'><%= inputData.message %></p>
-        <% } %>
+
       </div>
       <form action="/logIn" method="POST">
         <div class="content2">
           <label for="email" name="email">Email</label><br />
-          <input type="email" id="email" value="<%=inputData.username %>" name="email"/>
+          <input type="email" id="email" name="email"/>
         </div>
 
         <div class="content1">
           <label for="password" name="password">Password</label><br />
-          <input type="password" id="password" value="<%=inputData.password %>"  name="password" />
+          <input type="password" id="password" name="password" />
         </div>
 
         <div class="content1">
           <label for="Role" name="role">Role</label><br />
-          <select name="role" id="Role" value="<%=inputData.role %>" required>
+          <select name="role" id="Role"  required>
               <option value="" disabled selected>Select a Role</option>
               <option value="admin">Admin</option>
               <option value="hod">Head Of Department</option>

@@ -10,45 +10,56 @@
       <div class="main-content">
           <%- include('../includes/admin-header', { title: 'Create User' , subTitle: 'Creating a new user profile' }) %>
             <div class="container">
-                <form action="">
+                <form action="/admin/admin-createUser" method="POST" enctype="multipart/form-data">
                     <div class="name-container">
                         <label for="fname">First Name</label>
-                        <input type="text" id="fname" placeholder="First Name" name="First Name"><br>
+                        <input type="text" id="fname" placeholder="First Name" name="firstName"><br>
                         <label for="lname" id="laname">Last Name</label>
-                        <input type="text" id="lname" placeholder="Second Name"  name="Second Name"><br>
+                        <input type="text" id="lname" placeholder="Second Name"  name="lastName"><br>
                     </div>
-                    <label for="phone">Contact Number</label>
-                    <input type="tel" id="phone" name="phone" maxlength="10" placeholder=" Phone Number" name="Phone Number"><br>
-                    <label for="Role">Select Role</label>
-                    <select name="Role" id="Role">
-                        <option value="Principle">Principle</option>
-                        <option value="Peune">Peune</option>
-                        <option value="Proffessor">Professor</option>
-                        <option value="Accountant">Accountant</option>
-                    </select><br>
+                    <label for="phoneNumber">Contact Number</label>
+                    <input type="tel" id="phoneNumber" maxlength="10" placeholder=" Phone Number" name="phoneNumber"><br>
+
+<label for="Role" name="role">Select Role</label>
+          <select name="role" id="Role"  required>
+              <option value="" disabled selected>Select a Role</option>
+              <option value="principal">Principal</option>
+              <option value="hod">Head Of Department</option>
+              <option value="staff">Staff</option>
+            </select> <br>
+
                     <div class="gender">
-                        <label for="gender">Gender:</label>
+                        <label for="gender" >Gender:</label>
                         <label for="male">Male</label>
-                        <input type="radio" id="male" name="gender">
+                        <input type="radio" id="male" name="gender" value="male">
                         <label for="female">Female</label>
-                        <input type="radio" id="female" name="gender"><br>
+                        <input type="radio" id="female" name="gender" value="female"><br>
                     </div>
+
                    <label for="DOB">Date Of Birth</label>
-                    <input type="date" name="Date Of Birth" id="DOB"><br>
+                    <input type="date" name="dateOfBirth" id="DOB"><br>
+
                     <label for="DOJ">Date of Joining</label>
-                    <input type="date" name="Date Of Joining" id="DOJ"><br>
-                    <label for="qual">Qualification</label>
-                    <input type="text" name="Qualificaation" id="qual"><br>
-                    <label for="adress">Address</label>
+                    <input type="date" name="dateOfJoining" id="DOJ"><br>
+
+                    <label for="qualification">Qualification</label>
+                    <input type="text" name="qualification" id="qualification"><br>
+
+                    <label for="address">Address</label>
                     <input type="text" name="address" id="address"><br>
-                    <label for="email">EMAIL</label>
-                    <input type="email" id="email" placeholder="E-Mail" name="E-Mail"><br>
+
                     <label for="exp">Experience</label>
-                    <input type="number" name="Experience" id="exp"><br>
+                    <input type="number" name="experience" id="exp"><br>
+                    
+                    <label for="email">EMAIL</label>
+                    <input type="email" id="email" placeholder="E-Mail" name="email"><br>
+                    
                     <label for="pwd">Password</label>
-                    <input type="password" name="Password" id="pwd" placeholder="Password"><br>
+                    <input type="password" name="password" id="pwd" placeholder="Password"><br>
+
                     <label for="file">Photo</label>
-                    <input type="file" id="file"><br><br>
+                    <input type="file" id="file" name="userPhoto"><br><br>
+
                     <button type="reset" id="belowbtn">Reset</button>
                     <button type="submit" id="belowbtn">Submit</button>
                 </form>
