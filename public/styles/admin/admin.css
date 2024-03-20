@@ -55,36 +55,14 @@ h3{
     display: flex;
     margin:20px 20px ;
 }
-.container4{
-    background-color: rgba(27, 37, 55, 1);
-    height: 30vh;
-    width: 41vw;
-}
-table{
-    padding: 5px;
-}
-tr,th,td{
-    border: 2px solid white;
-    border-collapse: collapse;
-}
+
 .container5{
     background-color: rgba(27, 37, 55, 1);
-    margin-left: 1vw;
+
     height: 30vh;
     width: 20vw;
 }
 .bottom-container{
     display: flex;
     margin: 20px 20px ;
-}
-.container6{
-    background-color: rgba(27, 37, 55, 1);
-    height: 30vh;
-    width: 20vw;
-}
-.container7{
-    background-color: rgba(27, 37, 55, 1);
-    margin-left: 1vw;
-    height: 30vh;
-    width: 41vw;
 }
