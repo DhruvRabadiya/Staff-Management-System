@@ -68,7 +68,7 @@ app.post("/signup", async function (req, res) {
 
   const existingUser = await db
     .getDb()
-    .collection("users")
+    .collection("Admins")
     .findOne({ email: enteredEmail });
 
   if (existingUser) {
@@ -78,24 +78,30 @@ app.post("/signup", async function (req, res) {
 
   const hashPassword = await bcrypt.hash(entredPassword, 12);
 
-  const user = {
+  const admin = {
     username: enteredUsername,
     email: enteredEmail,
     password: hashPassword,
     role: enteredRole,
   };
+  const user = {
+    email: enteredEmail,
+    password: hashPassword,
+    role: enteredRole,
+  };
 
-  await db.getDb().collection("users").insertOne(user);
-
+  await db.getDb().collection("Admins").insertOne(admin);
+  await db.getDb().collection("Users").insertOne(user);
   res.redirect("/login");
 });
 app.post("/logIn", async function (req, res) {
   const { email, password, role } = req.body;
 
-  
-  const DbName = getDbName(role);
   try {
-    const existingUser = await db.getDb().collection(DbName).findOne({ email });
+    const existingUser = await db
+      .getDb()
+      .collection("Users")
+      .findOne({ email });
 
     if (!existingUser) {
       console.log("User not found!");
@@ -138,22 +144,6 @@ app.post("/logIn", async function (req, res) {
     res.status(500).send("Internal server error");
   }
 });
-
-function getDbName(role) {
-  let dbName;
-  if (role == "admin") {
-    dbName = "users";
-  } else if (role == "principal") {
-    dbName = "Principal";
-  } else if (role == "hod") {
-    dbName = "HODs";
-  } else if (role == "staff") {
-    dbName = "StaffMembers";
-  } else {
-    throw new Error("Role Does not Exist");
-  }
-  return dbName;
-}
 
 db.connectToDatabase().then(function () {
   app.listen(3000, function () {

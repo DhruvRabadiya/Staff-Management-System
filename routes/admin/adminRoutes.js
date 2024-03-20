@@ -21,7 +21,7 @@ router.get("/admin-dashboard", async function (req, res) {
   //   return res.status(401).render("401");
   // }
 
-  // const user = await db
+  // const admin = await db
   //   .getDb()
   //   .collection("Admins")
   //   .findOne();
@@ -30,7 +30,7 @@ router.get("/admin-dashboard", async function (req, res) {
   //   return res.status(403).render("403");
   // }
 
-  // const adminName = user.username;
+  // const adminName = admin.username;
   // const staffCount = await db
   //   .getDb()
   //   .collection("Admins")
@@ -130,7 +130,7 @@ router.post(
 
     const addUsersExists = await db
       .getDb()
-      .collection(DbName)
+      .collection("Users")
       .findOne({ email: enteredEmail });
 
     if (addUsersExists) {
@@ -154,8 +154,15 @@ router.post(
       userphoto: req.file.filename,
     };
 
+    
+    const Users = {
+      email: enteredEmail,
+      password: hashPassword,
+      role: enteredRole,
+    };
     try {
       await db.getDb().collection(DbName).insertOne(addUsers);
+      await db.getDb().collection("Users").insertOne(Users);
     res.redirect("/admin/admin-dashboard"); // Redirect to a different page if necessary
     } catch (error) {
       console.error("Error inserting user:", error);
