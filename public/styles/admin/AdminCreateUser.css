@@ -14,6 +14,8 @@
 .container{
      margin:100px auto;
      height:auto;
+     width: fit-content;
+     border: 2px solid white;
  }
  form{
     margin: 0px 30px ;
@@ -24,22 +26,23 @@
     background-color: #1C2438;
     color:aliceblue
  }
- .name-container{
-    display: flex;
- }
+h2{
+   text-align: center;
+   margin-top: 10px;
+
+}
  select,option{
     margin-top: 30px;
     font-size: 20px;
     color: white;
     background-color: #1C2438;
  } 
- #laname{
-    margin-left: 100px;
- }
+
  #belowbtn{
-    width: 80px;
-    height: 20px;
-    margin-top: 10px;
+    width: 100px;
+    height: 30px;
+    margin-top: 30px;
+    margin-bottom: 10px;
 }
 .gender{
    display: flex;

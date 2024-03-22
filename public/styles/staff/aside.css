@@ -21,6 +21,8 @@ a {
     background-color: rgba(27, 37, 55, 1);
     color: white;
     width: 19vw;
+        position: fixed;
+    height: 100vh;
 }
 
 .topmenu h1 {

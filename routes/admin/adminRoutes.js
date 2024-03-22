@@ -17,6 +17,10 @@ let upload = multer({
 });
 
 router.get("/admin-dashboard", async function (req, res) {
+  res.setHeader(
+    "Cache-Control",
+    "no-store, no-cache, must-revalidate, private"
+  );
   // if (!req.session.isAuthenticated) {
   //   return res.status(401).render("401");
   // }
@@ -173,6 +177,13 @@ router.post(
 router.get("/admin-event", async function (req, res) {
   res.render("admin/admin-event");
 });
+
+router.get("/admin-department", async function (req, res) {
+  res.render("admin/admin-department");
+});
+
+;
+
 router.get("/admin-salary", async function (req, res) {
   res.render("admin/admin-salary");
 });

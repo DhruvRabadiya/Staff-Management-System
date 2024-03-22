@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../../data/database");
 
+
 router.get("/staff-dashboard", async function (req, res) {
   // if (!req.session.isAuthenticated) {
   //   return res.status(401).render("401");
@@ -19,6 +20,7 @@ router.get("/staff-dashboard", async function (req, res) {
 
   // const userName = user.username;
 
+  console.log(req.user)
   res.render("staff/staff-dashboard");
 });
 router.get("/staff-salary", async function (req, res) {

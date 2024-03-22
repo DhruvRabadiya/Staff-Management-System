@@ -6,6 +6,9 @@ const app = express();
 
 const db = require("./data/database");
 
+
+
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static("public"));
@@ -13,16 +16,16 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false }));
 
 const adminRoutes = require("./routes/admin/adminRoutes");
-app.use("/admin", adminRoutes);
+app.use("/admin",  adminRoutes);
 
 const staffRoutes = require("./routes/staff/staffRoutes");
-app.use("/staff", staffRoutes);
+app.use("/staff",  staffRoutes);
 
 const principalRoutes = require("./routes/principal/principalRoutes");
-app.use("/principal", principalRoutes);
+app.use("/principal",  principalRoutes);
 
 const hodRoutes = require("./routes/hod/hodRoutes");
-app.use("/hod", hodRoutes);
+app.use("/hod",  hodRoutes);
 
 app.get("/", function (req, res) {
   res.redirect("/index");
@@ -96,6 +99,8 @@ app.post("/signup", async function (req, res) {
 });
 app.post("/logIn", async function (req, res) {
   const { email, password, role } = req.body;
+const user = { email, password, role };
+
 
   try {
     const existingUser = await db
