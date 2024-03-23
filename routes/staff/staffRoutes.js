@@ -20,7 +20,7 @@ router.get("/staff-dashboard", async function (req, res) {
 
   // const userName = user.username;
 
-  console.log(req.user)
+
   res.render("staff/staff-dashboard");
 });
 router.get("/staff-salary", async function (req, res) {
