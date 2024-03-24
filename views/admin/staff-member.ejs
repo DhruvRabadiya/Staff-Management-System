@@ -22,9 +22,9 @@
                
                     <% allUsers.forEach(user => { %>
                             <tr>
-                                <td><%= user.firstname %></td>
+                                <td><%= user.firstname %> <%= user.lastname %></td>
                                 <td id="same"><%= user.dateofbirth %></td>
-                                <td><%= user.phonenumber[0] %></td>
+                                <td><%= user.phonenumber %></td>
                                 <td><%= user.email %></td>
                                 <td><%= user.role %></td>
                             </tr>

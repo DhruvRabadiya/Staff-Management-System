@@ -130,7 +130,7 @@ router.post(
                 Area: enteredArea,
                 city: enteredcity,
               },
-              enterdDept: newUser.dept,
+              department: newUser.dept,
 
               userphoto: req.file.filename,
             },

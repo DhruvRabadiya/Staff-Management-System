@@ -1,64 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <%- include('../includes/HOD-head', { title : "Your Profile"}) %>
+    <link rel="stylesheet" href="/styles/staff/employee-profile.css" />
+  </head>
 
-<head>
-        <%- include('../includes/HOD-head' , {title : 'Staff Members'})%>
-
-    <link rel="stylesheet" href="/styles/hod/HOD-profile.css">
-</head>
-
-<body>
+  <body>
     <div class="main">
-                        <%- include('../includes/hod-aside') %>
-
-        <div class="main-content">
-                        <%- include('../includes/hod-header', { title: 'Staff Members' , subTitle: '' }) %>
-
-            <div class="container">
-                <div class="tablecontent">
-                    <table>
-                        <tr>
-                            <th><input type="checkbox"></th>
-                            <th>ID</th>
-                            <th>NAME</th>
-                            <TH>AGE</TH>
-                            <th>PHONE NO.</th>
-                            <TH>EMAIL</TH>
-                            <th>ROLE</th>
-                        </tr>
-                        <tr>
-                            <td id="same"><input type="checkbox"></td>
-                            <td id="same">1</td>
-                            <td>Tejas</td>
-                            <td id="same">38</td>
-                            <td>9924875811</td>
-                            <td>dhumale@gmail.com</td>
-                            <td>Principle</td>
-                        </tr>
-                        <tr>
-                            <td id="same"><input type="checkbox"></td>
-                            <td id="same">2</td>
-                            <td>Priya</td>
-                            <td id="same">35</td>
-                            <td>7359413436</td>
-                            <td>rabadiya@gmail.com</td>
-                            <td>Accountant</td>
-                        </tr>
-                        <tr>
-                            <td id="same"><input type="checkbox"></td>
-                            <td id="same">3</td>
-                            <td>Vikrant</td>
-                            <td id="same">30</td>
-                            <td>8141030494</td>
-                            <td>patil@gmail.com</td>
-                            <td>Proffessor</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            
+      <%- include('../includes/hod-aside') %>
+      <div class="main-content">
+        <div class="header">
+          <div>
+            <input type="text" placeholder="Search" id="search" />
+          </div>
+          <div>
+            <label for="search">
+              <i class="fa-solid fa-magnifying-glass"></i
+            ></label>
+          </div>
+          <div class="heading-but">
+            <form action="/logout">
+              <button type="submit">Logout</button>
+            </form>
+          </div>
         </div>
-    </div>
-</body>
+        <div class="heading">
+          <div>
+            <h1>Your Profile</h1>
+          </div>
+          <div>
+            <img src="/userImg/<%= user.userphoto %>"/>
+          </div>
+        </div>
+        <div class="container">
+          <div>
+            <p>Name: <%= user.firstname %> <%= user.lastname %></p>
+            <p>Phone Number: <%= user.phonenumber %></p>
+            <p>Emergancy Number: <%= user.emgnumber %></p>
+            <p>Date of Birth: <%= user.dateofbirth %></p>
 
+            <p>Gender: <%= user.gender %></p>
+            <p>Email : <%= user.email %></p>
+            <p>
+              Address : <%= user.address.Houseno %> <%= user.address.Society
+              %>, <%= user.address.Area %>
+            , <%= user.address.city %>
+            </p>
+
+<p>Experience: <%= user.experience %> Years Experience</p>
+<p>Qualification: <%= user.qualification %></p>
+          
+          <div class="leavebtn">
+            <a href="HOD-updprof">Update Profile</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

@@ -33,10 +33,10 @@ router.get("/admin-dashboard", async function (req, res) {
   // }
 
   const adminName = admin.username;
-  const staffCount = await db
-    .getDb()
-    .collection("Users")
-    .countDocuments({ role: "staff" });
+const staffCount = await db
+  .getDb()
+  .collection("Users")
+  .countDocuments({ role: { $ne: "admin" } });
 
   res.render("admin/admin-dashboard", {
     adminName: adminName,
@@ -58,11 +58,14 @@ router.get("/staff-member", async function (req, res) {
   // }
 
   const adminName = admin.username;
-  const allUsers = await db
-    .getDb()
-    .collection("Principal")
-    .aggregate([{ $unionWith: { coll: "StaffMembers" } }])
-    .toArray();
+ const allUsers = await db
+   .getDb()
+   .collection("Principal")
+   .aggregate([
+     { $unionWith: { coll: "HODs" } },
+     { $unionWith: { coll: "StaffMembers" } },
+   ])
+   .toArray();
 
   res.render("admin/staff-member", {
     adminName: adminName,
@@ -73,16 +76,37 @@ router.get("/staff-member", async function (req, res) {
 // Add more routes for admin functionalities
 // ...
 router.get("/admin-contact", async function (req, res) {
-  const userEmail = req.session.user.email;
+  try {
+    const userEmail = req.session.user.email;
 
-  // Fetch admin data based on the email of the user
-  const admin = await db
-    .getDb()
-    .collection("Admins")
-    .findOne({ email: userEmail });
-  const adminName = admin.username;
-  res.render("admin/admin-contact", { adminName: adminName });
+    // Fetch admin data based on the email of the user
+    const admin = await db
+      .getDb()
+      .collection("Admins")
+      .findOne({ email: userEmail });
+
+    const adminName = admin.username;
+
+    // Aggregate data from Principal, HODs, and StaffMembers collections
+    const allUsers = await db
+      .getDb()
+      .collection("Principal")
+      .aggregate([
+        { $unionWith: { coll: "HODs" } },
+        { $unionWith: { coll: "StaffMembers" } },
+      ])
+      .toArray();
+
+    res.render("admin/admin-contact", {
+      adminName: adminName,
+      allUsers: allUsers,
+    });
+  } catch (error) {
+    console.error("Error fetching admin contact:", error);
+    res.status(500).send("Internal server error");
+  }
 });
+
 router.get("/admin-achievement", async function (req, res) {
   const userEmail = req.session.user.email;
 
