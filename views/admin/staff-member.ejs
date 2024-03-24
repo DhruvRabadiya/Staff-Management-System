@@ -14,35 +14,22 @@
                 <table>
                     <tr>
                         <th>NAME</th>
-                        <TH>AGE</TH>
+                        <TH>Date Of Birth</TH>
                         <th>PHONE NO.</th>
                         <TH>EMAIL</TH>
                         <th>ROLE</th>
                     </tr>
-                    <tr>
-                       
-                        <td>Tejas</td>
-                        <td id="same">38</td>
-                        <td>9924875811</td>
-                        <td>dhumale@gmail.com</td>
-                        <td>Principle</td>
-                    </tr>
-                    <tr>
-                        
-                        <td>Priya</td>
-                        <td id="same">35</td>
-                        <td>7359413436</td>
-                        <td>rabadiya@gmail.com</td>
-                        <td>Accountant</td>
-                    </tr>
-                    <tr>
-                        
-                        <td>Vikrant</td>
-                        <td id="same">30</td>
-                        <td>8141030494</td>
-                        <td>patil@gmail.com</td>
-                        <td>Proffessor</td>
-                    </tr>
+               
+                    <% allUsers.forEach(user => { %>
+                            <tr>
+                                <td><%= user.firstname %></td>
+                                <td id="same"><%= user.dateofbirth %></td>
+                                <td><%= user.phonenumber[0] %></td>
+                                <td><%= user.email %></td>
+                                <td><%= user.role %></td>
+                            </tr>
+                        <% }); %>
+                   
                 </table>
             </div>
         </div>

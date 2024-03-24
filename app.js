@@ -1,31 +1,54 @@
 const path = require("path");
 const express = require("express");
-
+const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
 const bcrypt = require("bcryptjs");
 const app = express();
 
 const db = require("./data/database");
 
+// Create a MongoDB session store
+const store = new MongoDBStore({
+  uri: "mongodb://localhost:27017/session-store",
+  collection: "sessions",
+});
 
+// Catch errors in the session store
+store.on("error", function (error) {
+  console.error("Session store error:", error);
+});
 
+// Session middleware
+app.use(
+  session({
+    secret: "your-secret-key",
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24, // 1 day
+      secure: false, // Set to true if using HTTPS
+      httpOnly: true,
+    },
+  })
+);
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static("public"));
-
 app.use(express.urlencoded({ extended: false }));
 
 const adminRoutes = require("./routes/admin/adminRoutes");
-app.use("/admin",  adminRoutes);
+app.use("/admin", adminRoutes);
 
 const staffRoutes = require("./routes/staff/staffRoutes");
-app.use("/staff",  staffRoutes);
+app.use("/staff", staffRoutes);
 
 const principalRoutes = require("./routes/principal/principalRoutes");
-app.use("/principal",  principalRoutes);
+app.use("/principal", principalRoutes);
 
 const hodRoutes = require("./routes/hod/hodRoutes");
-app.use("/hod",  hodRoutes);
+app.use("/hod", hodRoutes);
 
 app.get("/", function (req, res) {
   res.redirect("/index");
@@ -99,8 +122,6 @@ app.post("/signup", async function (req, res) {
 });
 app.post("/logIn", async function (req, res) {
   const { email, password, role } = req.body;
-const user = { email, password, role };
-
 
   try {
     const existingUser = await db
@@ -127,6 +148,9 @@ const user = { email, password, role };
       return res.status(400).send("Role does not match");
     }
 
+    // Store user data in the session
+    req.session.user = existingUser;
+
     switch (existingUser.role) {
       case "admin":
         res.redirect("/admin/admin-dashboard");
@@ -148,6 +172,18 @@ const user = { email, password, role };
     console.error("Error authenticating user:", error);
     res.status(500).send("Internal server error");
   }
+});
+
+app.get("/logout", function (req, res) {
+  // Destroy the session
+  req.session.destroy(function (err) {
+    if (err) {
+      console.error("Error destroying session:", err);
+      return res.status(500).send("Internal server error");
+    }
+    // Redirect the user to the index page or any other desired page after logout
+    res.redirect("/index");
+  });
 });
 
 db.connectToDatabase().then(function () {

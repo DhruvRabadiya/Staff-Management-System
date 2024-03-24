@@ -27,36 +27,27 @@
             <h1>Your Profile</h1>
           </div>
           <div>
-            <img src="/img/fish.png" />
+            <img src="/userImg/<%= user.userphoto %>"/>
           </div>
         </div>
         <div class="container">
           <div>
-            <input type="text" value="Tejas" />
-            <input type="text" value="Shelar" />
-          </div>
-          <div>
-            <input type="tel" value="0262544321" />
-            <input type="tel" value="0262533021" />
-          </div>
-          <div>
-            <input type="date" value="23/01/1999" />
-            <input type="text" value="Male" />
-          </div>
-          <div>
-            <input type="email" value="" />
-            <input type="password" value="" />
-          </div>
-          <div>
-            <input type="text" value="1,ram appartment,Ahmedabad" />
-          </div>
-          <div>
-            <input type="text" value="IT" />
-            <input type="text" value="2 Years Experience" />
-          </div>
-          <div>
-            <input type="text" value="M.E CE" />
-          </div>
+            <p>Name: <%= user.firstname %> <%= user.lastname %></p>
+            <p>Phone Number: <%= user.phonenumber %></p>
+            <p>Emergancy Number: <%= user.emgnumber %></p>
+            <p>Date of Birth: <%= user.dateofbirth %></p>
+
+            <p>Gender: <%= user.gender %></p>
+            <p>Email : <%= user.email %></p>
+            <p>
+              Address : <%= user.address.Houseno %> <%= user.address.Society
+              %>, <%= user.address.Area %>
+            , <%= user.address.city %>
+            </p>
+
+<p>Experience: <%= user.experience %> Years Experience</p>
+<p>Qualification: <%= user.qualification %></p>
+          
           <div class="leavebtn">
             <a href="staff-updprof">Update Profile</a>
           </div>

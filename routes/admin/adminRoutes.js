@@ -17,66 +17,116 @@ let upload = multer({
 });
 
 router.get("/admin-dashboard", async function (req, res) {
-  res.setHeader(
-    "Cache-Control",
-    "no-store, no-cache, must-revalidate, private"
-  );
   // if (!req.session.isAuthenticated) {
   //   return res.status(401).render("401");
   // }
+  const userEmail = req.session.user.email;
 
-  // const admin = await db
-  //   .getDb()
-  //   .collection("Admins")
-  //   .findOne();
+  // Fetch admin data based on the email of the user
+  const admin = await db
+    .getDb()
+    .collection("Admins")
+    .findOne({ email: userEmail });
 
   // if (!user || (user.role !== "admin" && user.role !== "staff")) {
   //   return res.status(403).render("403");
   // }
 
-  // const adminName = admin.username;
-  // const staffCount = await db
-  //   .getDb()
-  //   .collection("Admins")
-  //   .countDocuments({ role: "staff" });
+  const adminName = admin.username;
+  const staffCount = await db
+    .getDb()
+    .collection("Users")
+    .countDocuments({ role: "staff" });
 
-  res.render("admin/admin-dashboard");
+  res.render("admin/admin-dashboard", {
+    adminName: adminName,
+    staffCount: staffCount,
+  });
 });
 
 router.get("/staff-member", async function (req, res) {
-  // if (!req.session.isAuthenticated) {
-  //   return res.status(401).render("401");
-  // }
+  const userEmail = req.session.user.email;
 
-  // const user = await db
-  //   .getDb()
-  //   .collection("users")
-  //   .findOne({ _id: req.session.user.id });
+  // Fetch admin data based on the email of the user
+  const admin = await db
+    .getDb()
+    .collection("Admins")
+    .findOne({ email: userEmail });
 
-  // if (!user || user.role !== "admin") {
+  // if (!user || (user.role !== "admin" && user.role !== "staff")) {
   //   return res.status(403).render("403");
   // }
-  // Handle admin contact information functionality
-  res.render("admin/staff-member");
+
+  const adminName = admin.username;
+  const allUsers = await db
+    .getDb()
+    .collection("Principal")
+    .aggregate([{ $unionWith: { coll: "StaffMembers" } }])
+    .toArray();
+
+  res.render("admin/staff-member", {
+    adminName: adminName,
+    allUsers: allUsers,
+  });
 });
 
 // Add more routes for admin functionalities
 // ...
 router.get("/admin-contact", async function (req, res) {
-  res.render("admin/admin-contact");
+  const userEmail = req.session.user.email;
+
+  // Fetch admin data based on the email of the user
+  const admin = await db
+    .getDb()
+    .collection("Admins")
+    .findOne({ email: userEmail });
+  const adminName = admin.username;
+  res.render("admin/admin-contact", { adminName: adminName });
 });
 router.get("/admin-achievement", async function (req, res) {
-  res.render("admin/admin-achievement");
+  const userEmail = req.session.user.email;
+
+  // Fetch admin data based on the email of the user
+  const admin = await db
+    .getDb()
+    .collection("Admins")
+    .findOne({ email: userEmail });
+  const adminName = admin.username;
+  res.render("admin/admin-achievement", { adminName: adminName });
 });
 router.get("/admin-attendance", async function (req, res) {
-  res.render("admin/admin-attendance");
+  const userEmail = req.session.user.email;
+
+  // Fetch admin data based on the email of the user
+  const admin = await db
+    .getDb()
+    .collection("Admins")
+    .findOne({ email: userEmail });
+  const adminName = admin.username;
+  res.render("admin/admin-attendance", { adminName: adminName });
 });
 router.get("/admin-leave", async function (req, res) {
-  res.render("admin/admin-leave");
+  const userEmail = req.session.user.email;
+
+  // Fetch admin data based on the email of the user
+  const admin = await db
+    .getDb()
+    .collection("Admins")
+    .findOne({ email: userEmail });
+  const adminName = admin.username;
+  res.render("admin/admin-leave", { adminName: adminName });
 });
 
 router.get("/admin-createUser", async function (req, res) {
-  res.render("admin/admin-createUser");
+  const userEmail = req.session.user.email;
+
+  // Fetch admin data based on the email of the user
+  const admin = await db
+    .getDb()
+    .collection("Admins")
+    .findOne({ email: userEmail });
+  const adminName = admin.username;
+  res.render("admin/admin-createUser", { adminName: adminName });
 });
 
 router.post(
@@ -84,32 +134,13 @@ router.post(
   upload.single("userPhoto"),
   async function (req, res) {
     const newUser = req.body;
-
-    const entredFirstName = newUser.firstName;
-    const enteredLastName = newUser.lastName;
-    const enteredPhoneNumber = newUser.phoneNumber;
     const enteredRole = newUser.role;
-    const enterdGender = newUser.gender;
-    const enteredDateOfBirth = newUser.dateOfBirth;
-    const enteredDateOfJoining = newUser.dateOfJoining;
-    const enteredQualification = newUser.qualification;
-    const enteredAddress = newUser.address;
-    const enteredExperience = newUser.experience;
     const enteredEmail = newUser.email;
     const enteredPassword = newUser.password;
 
     if (
       !enteredEmail ||
-      !entredFirstName ||
-      !enteredLastName ||
-      !enteredPhoneNumber ||
       !enteredRole ||
-      !enterdGender ||
-      !enteredDateOfBirth ||
-      !enteredDateOfJoining ||
-      !enteredQualification ||
-      !enteredAddress ||
-      !enteredExperience ||
       !enteredPassword.trim() || // Trim the password
       enteredPassword.trim().length < 6 || // Check the length after trimming
       !enteredEmail.includes("@")
@@ -144,21 +175,11 @@ router.post(
     const hashPassword = await bcrypt.hash(enteredPassword, 12);
 
     const addUsers = {
-      firstname: entredFirstName,
-      lastname: enteredLastName,
-      phonenumber: enteredPhoneNumber,
-      role: enteredRole,
-      gender: enterdGender,
-      dateofbirth: enteredDateOfBirth,
-      dateofjoining: enteredDateOfJoining,
-      address: enteredAddress,
-      experience: enteredExperience,
       email: enteredEmail,
       password: hashPassword,
-      userphoto: req.file.filename,
+      role: enteredRole,
     };
 
-    
     const Users = {
       email: enteredEmail,
       password: hashPassword,
@@ -167,7 +188,7 @@ router.post(
     try {
       await db.getDb().collection(DbName).insertOne(addUsers);
       await db.getDb().collection("Users").insertOne(Users);
-    res.redirect("/admin/admin-dashboard"); // Redirect to a different page if necessary
+      res.redirect("/admin/admin-dashboard"); // Redirect to a different page if necessary
     } catch (error) {
       console.error("Error inserting user:", error);
       res.status(500).send("Internal server error");
@@ -175,16 +196,38 @@ router.post(
   }
 );
 router.get("/admin-event", async function (req, res) {
-  res.render("admin/admin-event");
+  const userEmail = req.session.user.email;
+
+  // Fetch admin data based on the email of the user
+  const admin = await db
+    .getDb()
+    .collection("Admins")
+    .findOne({ email: userEmail });
+  const adminName = admin.username;
+  res.render("admin/admin-event", { adminName: adminName });
 });
 
 router.get("/admin-department", async function (req, res) {
-  res.render("admin/admin-department");
+  const userEmail = req.session.user.email;
+
+  // Fetch admin data based on the email of the user
+  const admin = await db
+    .getDb()
+    .collection("Admins")
+    .findOne({ email: userEmail });
+  const adminName = admin.username;
+  res.render("admin/admin-department", { adminName: adminName });
 });
 
-;
-
 router.get("/admin-salary", async function (req, res) {
-  res.render("admin/admin-salary");
+  const userEmail = req.session.user.email;
+
+  // Fetch admin data based on the email of the user
+  const admin = await db
+    .getDb()
+    .collection("Admins")
+    .findOne({ email: userEmail });
+  const adminName = admin.username;
+  res.render("admin/admin-salary", { adminName: adminName });
 });
 module.exports = router;
