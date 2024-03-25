@@ -235,15 +235,17 @@ router.post("/staff-leaveapply", async (req, res) => {
   const userEmail = req.session.user.email;
 
   try {
+    const dept = await db.getDb().collection("StaffMembers").findOne(userEmail)
     // Save the leave request to the database
     await db.getDb().collection("LeaveRequests").insertOne({
       email: userEmail,
       title: title,
       fromDate: fromDate,
       toDate: toDate,
-      reason: reason,
+
       leaveType: leaveType,
-      status: "pending", // Set initial status as pending
+      status: "pending",
+      department: dept.department, // Set initial status as pending
     });
 
     res.redirect("/staff/staff-dashboard"); // Redirect to dashboard after submission

@@ -149,7 +149,7 @@ router.post(
                 Area: enteredArea,
                 city: enteredcity,
               },
-              enterdDept: newUser.dept,
+              department: newUser.dept,
 
               userphoto: req.file.filename,
             },
@@ -212,7 +212,7 @@ router.get("/HOD-leave", async (req, res) => {
     }
 
     const hodDepartment = hod.department;
-
+console.log(hodDepartment)
     // Fetch leave requests only for HOD's department
     const leaveRequests = await db
       .getDb()

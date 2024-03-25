@@ -131,14 +131,41 @@ router.get("/admin-attendance", async function (req, res) {
 });
 router.get("/admin-leave", async function (req, res) {
   const userEmail = req.session.user.email;
+try {
+  const leaveRequests = await db
+    .getDb()
+    .collection("LeaveRequests")
+    .find()
+    .toArray();
 
+  // Iterate through each leave request and fetch the corresponding user email
+  for (const request of leaveRequests) {
+    const userEmail = await db
+      .getDb()
+      .collection("StaffMembers")
+      .findOne({ email: request.email }); // Assuming email field contains the user email
+
+    // Add the user email to the leave request object
+    request.userEmail = userEmail;
+  }
   // Fetch admin data based on the email of the user
   const admin = await db
     .getDb()
     .collection("Admins")
     .findOne({ email: userEmail });
   const adminName = admin.username;
-  res.render("admin/admin-leave", { adminName: adminName });
+
+  res.render("admin/admin-leave", {
+    leaveRequests: leaveRequests,
+    adminName: adminName,
+  });
+} catch (error) {
+  console.error("Error fetching leave requests:", error);
+  res.status(500).send("Internal server error");
+}
+  
+
+
 });
 
 router.get("/admin-createUser", async function (req, res) {
@@ -161,10 +188,12 @@ router.post(
     const enteredRole = newUser.role;
     const enteredEmail = newUser.email;
     const enteredPassword = newUser.password;
+    const enteredSalary = newUser.salary;
 
     if (
       !enteredEmail ||
       !enteredRole ||
+      !enteredSalary||
       !enteredPassword.trim() || // Trim the password
       enteredPassword.trim().length < 6 || // Check the length after trimming
       !enteredEmail.includes("@")
@@ -202,6 +231,7 @@ router.post(
       email: enteredEmail,
       password: hashPassword,
       role: enteredRole,
+      salary:enteredSalary
     };
 
     const Users = {
