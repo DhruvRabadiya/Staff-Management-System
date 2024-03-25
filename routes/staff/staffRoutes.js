@@ -60,7 +60,15 @@ router.get("/staff-achadd", async function (req, res) {
 
 
 router.get("/staff-event", async function (req, res) {
-  res.render("staff/staff-event");
+try {
+  // Fetch events from the database
+  const events = await db.getDb().collection("Events").find().toArray();
+
+  // Render the HOD-event.ejs page with the fetched events
+  res.render("staff/staff-event", { events: events });
+} catch (error) {
+  console.error("Error fetching events:", error);
+}
 });
 router.get("/staff-salary", async function (req, res) {
   res.render("staff/staff-salary");

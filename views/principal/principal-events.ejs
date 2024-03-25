@@ -12,36 +12,24 @@
         <%- include('../includes/principal-header', { title: 'Events' , subTitle: 'List of  Upcoming Events' }) %>
         <div class="container">
             <div class="tablecontent">
-                <table>
-                    <tr>
-                        <th>NAME</th>
-                        <TH>Date</TH>
-                        <th>Time</th>
-                        <TH>Place</TH>
-                        <th>Target Audience</th>
-                    </tr>
-                    <tr>
-                        <td id="same">Expertise in Teaching</td>
-                        <td id="same">5/2/24</td>
-                        <td id="same"> 11:00am</td>
-                        <td id="same"> Auditorium</td>
-                        <td id="same">Professor</td>
-                    </tr>
-                    <tr>
-                        <td id="same">Know The Self</td>
-                        <td id="same">9/2/24</td>
-                        <td id="same">12:00pm</td>
-                        <td id="same">Auditorium</td>
-                        <td id="same">Open for All</td>
-                    </tr>
-                    <tr>
-                        <td id="same">Empowering Woman</td>
-                        <td id="same">8/3/24</td>
-                        <td id="same">1:00pm</td>
-                        <td id="same">Auditorium</td>
-                        <td id="same">Only For Womans</td>
-                    </tr>
-                </table>
+                    <table>
+                        <tr>
+                            <th>NAME</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Place</th>
+                            <th>Target Audience</th>
+                        </tr>
+                        <% events.forEach(event => { %>
+                        <tr>
+                            <td><%= event.name %></td>
+                            <td><%= event.date %></td>
+                            <td><%= event.time %></td>
+                            <td><%= event.place %></td>
+                            <td><%= event.targetAudience %></td>
+                        </tr>
+                        <% }) %>
+                    </table>
             </div>
         </div>
     </div>

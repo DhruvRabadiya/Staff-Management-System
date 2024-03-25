@@ -33,10 +33,10 @@ router.get("/admin-dashboard", async function (req, res) {
   // }
 
   const adminName = admin.username;
-const staffCount = await db
-  .getDb()
-  .collection("Users")
-  .countDocuments({ role: { $ne: "admin" } });
+  const staffCount = await db
+    .getDb()
+    .collection("Users")
+    .countDocuments({ role: { $ne: "admin" } });
 
   res.render("admin/admin-dashboard", {
     adminName: adminName,
@@ -58,14 +58,14 @@ router.get("/staff-member", async function (req, res) {
   // }
 
   const adminName = admin.username;
- const allUsers = await db
-   .getDb()
-   .collection("Principal")
-   .aggregate([
-     { $unionWith: { coll: "HODs" } },
-     { $unionWith: { coll: "StaffMembers" } },
-   ])
-   .toArray();
+  const allUsers = await db
+    .getDb()
+    .collection("Principal")
+    .aggregate([
+      { $unionWith: { coll: "HODs" } },
+      { $unionWith: { coll: "StaffMembers" } },
+    ])
+    .toArray();
 
   res.render("admin/staff-member", {
     adminName: adminName,
@@ -131,41 +131,38 @@ router.get("/admin-attendance", async function (req, res) {
 });
 router.get("/admin-leave", async function (req, res) {
   const userEmail = req.session.user.email;
-try {
-  const leaveRequests = await db
-    .getDb()
-    .collection("LeaveRequests")
-    .find()
-    .toArray();
-
-  // Iterate through each leave request and fetch the corresponding user email
-  for (const request of leaveRequests) {
-    const userEmail = await db
+  try {
+    const leaveRequests = await db
       .getDb()
-      .collection("StaffMembers")
-      .findOne({ email: request.email }); // Assuming email field contains the user email
+      .collection("LeaveRequests")
+      .find()
+      .toArray();
 
-    // Add the user email to the leave request object
-    request.userEmail = userEmail;
+    // Iterate through each leave request and fetch the corresponding user email
+    for (const request of leaveRequests) {
+      const userEmail = await db
+        .getDb()
+        .collection("StaffMembers")
+        .findOne({ email: request.email }); // Assuming email field contains the user email
+
+      // Add the user email to the leave request object
+      request.userEmail = userEmail;
+    }
+    // Fetch admin data based on the email of the user
+    const admin = await db
+      .getDb()
+      .collection("Admins")
+      .findOne({ email: userEmail });
+    const adminName = admin.username;
+
+    res.render("admin/admin-leave", {
+      leaveRequests: leaveRequests,
+      adminName: adminName,
+    });
+  } catch (error) {
+    console.error("Error fetching leave requests:", error);
+    res.status(500).send("Internal server error");
   }
-  // Fetch admin data based on the email of the user
-  const admin = await db
-    .getDb()
-    .collection("Admins")
-    .findOne({ email: userEmail });
-  const adminName = admin.username;
-
-  res.render("admin/admin-leave", {
-    leaveRequests: leaveRequests,
-    adminName: adminName,
-  });
-} catch (error) {
-  console.error("Error fetching leave requests:", error);
-  res.status(500).send("Internal server error");
-}
-  
-
-
 });
 
 router.get("/admin-createUser", async function (req, res) {
@@ -193,7 +190,7 @@ router.post(
     if (
       !enteredEmail ||
       !enteredRole ||
-      !enteredSalary||
+      !enteredSalary ||
       !enteredPassword.trim() || // Trim the password
       enteredPassword.trim().length < 6 || // Check the length after trimming
       !enteredEmail.includes("@")
@@ -231,7 +228,7 @@ router.post(
       email: enteredEmail,
       password: hashPassword,
       role: enteredRole,
-      salary:enteredSalary
+      salary: enteredSalary,
     };
 
     const Users = {
@@ -250,6 +247,29 @@ router.post(
   }
 );
 router.get("/admin-event", async function (req, res) {
+  try {
+    const userEmail = req.session.user.email;
+
+    // Fetch admin data based on the email of the user
+    const admin = await db
+      .getDb()
+      .collection("Admins")
+      .findOne({ email: userEmail });
+    const adminName = admin.username;
+
+    // Fetch all upcoming events from the database
+    const eventsCursor = await db.getDb().collection("Events").find(); // Assuming you have a Mongoose model named Event
+    const events = await eventsCursor.toArray(); // Convert cursor to array
+
+    // Render the admin-events.ejs page with the fetched events
+    res.render("admin/admin-event", { events: events, adminName: adminName });
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.get("/admin-addevent", async function (req, res) {
   const userEmail = req.session.user.email;
 
   // Fetch admin data based on the email of the user
@@ -258,7 +278,24 @@ router.get("/admin-event", async function (req, res) {
     .collection("Admins")
     .findOne({ email: userEmail });
   const adminName = admin.username;
-  res.render("admin/admin-event", { adminName: adminName });
+  res.render("admin/admin-addevent", { adminName: adminName });
+});
+router.post("/admin-addevent", async function (req, res) {
+  try {
+    // Extract event details from the request body
+    const { name, date, time, place, targetAudience } = req.body;
+
+    // Insert the new event into the database
+    await db
+      .getDb()
+      .collection("Events")
+      .insertOne({ name, date, time, place, targetAudience });
+
+    res.redirect("/admin/admin-event");
+  } catch (error) {
+    console.error("Error adding event:", error);
+    res.status(500).send("Internal server error");
+  }
 });
 
 router.get("/admin-department", async function (req, res) {

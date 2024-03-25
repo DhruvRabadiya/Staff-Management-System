@@ -28,7 +28,16 @@ router.get("/principal-leave", async function (req, res) {
   res.render("principal/principal-leave");
 });
 router.get("/principal-events", async function (req, res) {
-  res.render("principal/principal-events");
+   try {
+     // Fetch events from the database
+     const events = await db.getDb().collection("Events").find().toArray();
+
+     // Render the HOD-event.ejs page with the fetched events
+     res.render("principal/principal-events", { events: events });
+   } catch (error) {
+     console.error("Error fetching events:", error);
+   }
+
 });
 
 router.get("/principal-salary", async function (req, res) {

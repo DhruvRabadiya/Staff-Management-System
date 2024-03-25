@@ -52,8 +52,18 @@ router.get("/HOD-ach", async function (req, res) {
   res.render("hod/HOD-ach");
 });
 router.get("/HOD-event", async function (req, res) {
-  res.render("hod/HOD-event");
+  try {
+    // Fetch events from the database
+    const events = await db.getDb().collection("Events").find().toArray();
+
+    // Render the HOD-event.ejs page with the fetched events
+    res.render("hod/HOD-event", { events: events });
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
+
 router.get("/HOD-Attendance", async function (req, res) {
   res.render("hod/HOD-Attendance");
 });
