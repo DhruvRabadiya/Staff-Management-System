@@ -108,16 +108,32 @@ router.get("/admin-contact", async function (req, res) {
 });
 
 router.get("/admin-achievement", async function (req, res) {
-  const userEmail = req.session.user.email;
+  try {
+    // Fetch all achievements from the database
+    const achievements = await db
+      .getDb()
+      .collection("Achievements")
+      .find()
+      .toArray();
 
-  // Fetch admin data based on the email of the user
-  const admin = await db
-    .getDb()
-    .collection("Admins")
-    .findOne({ email: userEmail });
-  const adminName = admin.username;
-  res.render("admin/admin-achievement", { adminName: adminName });
+    // Fetch admin data based on the email of the user
+    const userEmail = req.session.user.email;
+    const admin = await db
+      .getDb()
+      .collection("Admins")
+      .findOne({ email: userEmail });
+    const adminName = admin.username;
+
+    res.render("admin/admin-achievement", {
+      adminName: adminName,
+      achievements: achievements,
+    });
+  } catch (error) {
+    console.error("Error fetching achievements:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
+
 router.get("/admin-attendance", async function (req, res) {
   const userEmail = req.session.user.email;
 

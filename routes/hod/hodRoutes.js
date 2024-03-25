@@ -49,8 +49,22 @@ router.get("/HOD-staff", async function (req, res) {
   }
 });
 router.get("/HOD-ach", async function (req, res) {
-  res.render("hod/HOD-ach");
+  try {
+    // Fetch all achievements from the database
+    const achievements = await db
+      .getDb()
+      .collection("Achievements")
+      .find({})
+      .toArray();
+
+    // Render the HOD-ach.ejs view with the achievements data
+    res.render("hod/HOD-ach", { achievements: achievements });
+  } catch (error) {
+    console.error("Error fetching achievements:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
+
 router.get("/HOD-event", async function (req, res) {
   try {
     // Fetch events from the database
@@ -69,7 +83,55 @@ router.get("/HOD-Attendance", async function (req, res) {
 });
 
 router.get("/HOD-salary", async function (req, res) {
-  res.render("hod/HOD-salary");
+
+  try {
+    const userEmail = req.session.user.email;
+
+    // Fetch staff member's salary details from the database
+    const staffMember = await db
+      .getDb()
+      .collection("HODs")
+      .findOne({ email: userEmail });
+
+    // Convert salary string to number
+    const baseSalary = parseFloat(staffMember.salary);
+
+    // Check if the conversion was successful
+    if (isNaN(baseSalary)) {
+      throw new Error("Invalid salary format in the database");
+    }
+
+    // Calculate A.G.P (Assuming it's a fixed amount)
+    const AGP = 5000; // Example: A.G.P is 5000
+
+    // Calculate other components based on the base salary
+    const DA = 0.1 * baseSalary; // Example: 10% of base salary for D.A
+    const HRA = 0.05 * baseSalary; // Example: 5% of base salary for HRA
+    const otherSalary = 0.02 * baseSalary; // Example: 2% of base salary for other components
+
+    // Calculate total salary
+    const totalSalary = baseSalary + AGP + DA + HRA + otherSalary;
+
+    // Prepare the staffSalary object to pass to the view
+    const staffSalary = {
+      name: staffMember.firstname,
+      salary: {
+        basic: baseSalary,
+        agp: AGP,
+        da: DA,
+        hra: HRA,
+        other: otherSalary,
+        total: totalSalary,
+      },
+    };
+
+    // Render the staff-salary.ejs page with the calculated salary details
+    res.render("hod/HOD-salary", { staffSalary: staffSalary });
+  } catch (error) {
+    console.error("Error fetching staff salary:", error);
+    res.status(500).send("Internal Server Error");
+  }
+
 });
 
 router.get("/HOD-profile", async function (req, res) {

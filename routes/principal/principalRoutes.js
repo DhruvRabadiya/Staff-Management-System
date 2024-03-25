@@ -18,8 +18,24 @@ router.get("/principal-dashboard", async function (req, res) {
   res.render("principal/principal-dashboard");
 });
 router.get("/Principal-Achievement", async function (req, res) {
-  res.render("principal/Principal-Achievement");
+  try {
+    // Fetch all achievements from the database
+    const achievements = await db
+      .getDb()
+      .collection("Achievements")
+      .find({})
+      .toArray();
+
+    // Render the Principal-Achievement.ejs view with the achievements data
+    res.render("principal/Principal-Achievement", {
+      achievements: achievements,
+    });
+  } catch (error) {
+    console.error("Error fetching achievements:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
+
 router.get("/principal-department", async function (req, res) {
   res.render("principal/principal-department");
 });

@@ -1,20 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-        <%- include('../includes/HOD-head' , {title : 'Achievements'})%>
-
+    <%- include('../includes/HOD-head', { title : 'Achievements'}) %>
     <link rel="stylesheet" href="/styles/hod/HOD-ach.css">
 </head>
-
 <body>
     <div class="main">
-        <div class="main">
-                <%- include('../includes/hod-aside') %>
-
+        <%- include('../includes/hod-aside') %>
         <div class="main-content">
-                    <%- include('../includes/hod-header', { title: 'Achievements' , subTitle: '' }) %>
-
+            <%- include('../includes/hod-header', { title: 'Achievements', subTitle: '' }) %>
             <div class="container">
                 <div class="tablecontent">
                     <table>
@@ -26,47 +20,19 @@
                             <th>Description</th>
                             <TH>Certificate</th>
                         </tr>
+                        <% achievements.forEach((achievement, index) => { %>
                         <tr>
-                            <td id="same">1</td>
-                            <td>Tejas</td>
-                            <td id="same">12/2/2024</td>
-                            <td id="same">Sales Performance</td>
-                            <td >"Excedded sales target consistently for three Consecutive quarter,Securing several keysaccounts and contributing to 20% increase in overall sales revenue" </td>
-                            <td id="same"><button id="mybtn">View</button></td>
+                            <td><%= index + 1 %></td>
+                            <td><%= achievement.name %></td>
+                            <td><%= achievement.date %></td>
+                            <td><%= achievement.title %></td>
+                            <td><%= achievement.description %></td>
+                             <td> <img style="height: 300px; width: 300px;" src="/achievement/<%= achievement.certificate %>"></td>
                         </tr>
-                        <tr>
-                            <td id="same">2</td>
-                            <td>Priya</td>
-                            <td id="same">2/1/24</td>
-                            <td id="same">Conflict Resolution</td>
-                            <td>"Effectively Mediated and resolved conflicts within the team , fostering a positive work environment and maintaining strong team dynamics"</td>
-                            <td id="same"><button id="mybtn">View</button></td>
-                        </tr>
-                        <tr>
-                            <td id="same">3</td>
-                            <td>Vikrant</td>
-                            <td id="same">3/2/24</td>
-                            <td id="same">Mediation Bootcamp</td>
-                            <td>Carried out a effective Bootcamp of teaching employees meditation under Art of living Organization</td>
-                            <td id="same"><button id="mybtn">View</button></td>
-                        </tr>
-                        <tr>
-                            <td id="same">3</td>
-                            <td>Vikrant</td>
-                            <td id="same">3/2/24</td>
-                            <td id="same">Mediation Bootcamp</td>
-                            <td>Carried out a effective Bootcamp of teaching employees meditation under Art of living Organization</td>
-                            <td id="same"><button id="mybtn">View</button></td>
-                        </tr><tr>
-                            <td id="same">3</td>
-                            <td>Vikrant</td>
-                            <td id="same">3/2/24</td>
-                            <td id="same">Mediation Bootcamp</td>
-                            <td>Carried out a effective Bootcamp of teaching employees meditation under Art of living Organization</td>
-                            <td id="same"><button id="mybtn">View</button></td>
-                        </tr>
+                        <% }) %>
                     </table>
                 </div>
+            </div>
         </div>
     </div>
 </body>

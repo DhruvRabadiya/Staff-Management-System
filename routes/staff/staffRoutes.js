@@ -4,6 +4,7 @@ const router = express.Router();
 const db = require("../../data/database");
 const multer = require("multer");
 const bcrypt = require("bcryptjs");
+const e = require("express");
 
 let Storege = multer.diskStorage({
   destination: "public/userImg/",
@@ -13,15 +14,74 @@ let Storege = multer.diskStorage({
 });
 
 let upload = multer({
-  storage: Storege,
+  storage: Storege, 
 });
 
+const achievementStorage = multer.diskStorage({
+  destination: "public/achievement/",
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+const uploadAchievementPhoto = multer({ storage: achievementStorage });
 router.get("/staff-dashboard", async function (req, res) {
   res.render("staff/staff-dashboard");
 });
+
+
 router.get("/staff-salary", async function (req, res) {
-  res.render("staff/staff-salary");
+  try {
+    const userEmail = req.session.user.email;
+
+    // Fetch staff member's salary details from the database
+    const staffMember = await db
+      .getDb()
+      .collection("StaffMembers")
+      .findOne({ email: userEmail });
+
+    // Convert salary string to number
+    const baseSalary = parseFloat(staffMember.salary);
+
+    // Check if the conversion was successful
+    if (isNaN(baseSalary)) {
+      throw new Error("Invalid salary format in the database");
+    }
+
+    // Calculate A.G.P (Assuming it's a fixed amount)
+    const AGP = 5000; // Example: A.G.P is 5000
+
+    // Calculate other components based on the base salary
+    const DA = 0.1 * baseSalary; // Example: 10% of base salary for D.A
+    const HRA = 0.05 * baseSalary; // Example: 5% of base salary for HRA
+    const otherSalary = 0.02 * baseSalary; // Example: 2% of base salary for other components
+
+    // Calculate total salary
+    const totalSalary = baseSalary + AGP + DA + HRA + otherSalary;
+
+    // Prepare the staffSalary object to pass to the view
+    const staffSalary = {
+      name: staffMember.firstname,
+      salary: {
+        basic: baseSalary,
+        agp: AGP,
+        da: DA,
+        hra: HRA,
+        other: otherSalary,
+        total: totalSalary,
+      },
+    };
+
+    // Render the staff-salary.ejs page with the calculated salary details
+    res.render("staff/staff-salary", { staffSalary: staffSalary });
+  } catch (error) {
+    console.error("Error fetching staff salary:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
+
+
+
 router.get("/staff-profile", async function (req, res) {
   try {
     const userEmail = req.session.user.email;
@@ -50,11 +110,77 @@ router.get("/staff-updprof", async function (req, res) {
   res.render("staff/staff-updprof");
 });
 router.get("/staff-ach", async function (req, res) {
-  res.render("staff/staff-ach");
+  try {
+    const userEmail = req.session.user.email;
+
+    // Fetch the staff member's own achievements
+    const staffAchievements = await db
+      .getDb()
+      .collection("Achievements")
+      .find({ email: userEmail })
+      .toArray();
+
+    // Fetch achievements of other staff members
+    const otherAchievements = await db
+      .getDb()
+      .collection("Achievements")
+      .find({ email: { $ne: userEmail } }) // Exclude the current staff member's achievements
+      .toArray();
+
+    // Render the staff-ach.ejs view with both sets of achievements
+    res.render("staff/staff-ach", {
+      staffAchievements: staffAchievements,
+      otherAchievements: otherAchievements,
+    });
+  } catch (error) {
+    console.error("Error fetching achievements:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
+
 router.get("/staff-achadd", async function (req, res) {
   res.render("staff/staff-achadd");
 });
+
+// Assuming you have a database connection stored in the variable `db`
+router.post(
+  "/staff-achadd",
+  uploadAchievementPhoto.single("certificate"),
+  async function (req, res) {
+    try {
+      const email = req.session.user.email;
+      const staffMember = await db
+        .getDb()
+        .collection("StaffMembers")
+        .findOne({ email: email });
+
+      // Check if staff member exists
+      if (!staffMember) {
+        return res.status(404).send("Staff member not found");
+      }
+
+      const { title, date, description } = req.body;
+      const certificate = req.file.filename;
+
+      // Construct the achievement object
+      const achievement = {
+        name: staffMember.firstname, // Access firstname from staffMember object
+        title: title,
+        date: date,
+        description: description,
+        certificate: certificate,
+      };
+
+      // Insert the achievement into the database
+      await db.getDb().collection("Achievements").insertOne(achievement);
+
+      res.redirect("/staff/staff-ach");
+    } catch (error) {
+      console.error("Error adding achievement:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  }
+);
 
 
 

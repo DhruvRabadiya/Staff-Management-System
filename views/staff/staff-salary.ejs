@@ -19,6 +19,7 @@
                 <th>Id</th>
                 <th>Name</th>
                 <th>Basic Salary</th>
+                <th>A.G.P Salary</th>
                 <th>D.A Salary</th>
                 <th>H.R.A Salary</th>
                 <th>Other Salary</th>
@@ -26,12 +27,13 @@
               </tr>
               <tr>
                 <td id="same">1</td>
-                <td id="same">Tejas</td>
-                <td id="same">50000</td>
-                <td id="same">1000</td>
-                <td id="same">2000</td>
-                <td id="same">7000</td>
-                <td id="same">60000</td>
+                <td id="same"><%= staffSalary.name %></td>
+                <td id="same"><%= staffSalary.salary.basic %></td>
+                <td id="same"><%= staffSalary.salary.agp %></td>
+                <td id="same"><%= staffSalary.salary.da %></td>
+                <td id="same"><%= staffSalary.salary.hra %></td>
+                <td id="same"><%= staffSalary.salary.other %></td>
+                <td id="same"><%= staffSalary.salary.total %></td>
               </tr>
             </table>
           </div>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <%- include('../includes/staff-head', { title : "Achievement"}) %>
+    <%- include('../includes/staff-head', { title : "Achievements"}) %>
     <link rel="stylesheet" href="/styles/staff/employee-ach.css" />
   </head>
 
@@ -9,38 +9,37 @@
     <div class="main">
       <%- include('../includes/staff-aside') %>
       <div class="main-content">
-        <%- include('../includes/staff-header', { title: 'Your Achievement' ,
-        subTitle: '' }) %>
+        <%- include('../includes/staff-header', { title: 'Your Achievements', subTitle: '' }) %>
 
-        <div class="Achievement">
-          <div class="Ach-img">
-            <img src="/img/Achievement.png" />
+        <% staffAchievements.forEach(achievement => { %>
+          <!-- Render staff member's own achievements -->
+          <div class="Achievement">
+            <div class="Ach-img">
+              <img src="/public/achievement/<%= achievement.certificate %>" />
+            </div>
+            <div class="Ach-p">
+              <p><%= achievement.date %></p>
+              <p><%= achievement.title %></p>
+              <p><%= achievement.description %></p>
+            </div>
           </div>
-          <div class="Ach-p">
-            <p>1/1/2024</p>
-            <p>Mentor of Winning Team</p>
-            <p>
-              Guided and inspiring the Winning team to success in
-              hackathon,nurturing innovation,collaboration, and technical
-              excellence to achieve first place honor
-            </p>
-          </div>
-        </div>
+        <% }) %>
 
-        <div class="Achievement">
-          <div class="Ach-img">
-            <img src="/img/Achievement.png" />
+        <% otherAchievements.forEach(achievement => { %>
+          <!-- Render achievements of other staff members -->
+          <div class="Achievement">
+            <div class="Ach-img">
+              <img src="/achievement/<%= achievement.certificate %>" />
+            </div>
+            <div class="Ach-p">
+               <p><%= achievement.name %></p>
+              <p><%= achievement.date %></p>
+              <p><%= achievement.title %></p>
+              <p><%= achievement.description %></p>
+            </div>
           </div>
-          <div class="Ach-p">
-            <p>1/1/2024</p>
-            <p>Mentor of Winning Team</p>
-            <p>
-              Guided and inspiring the Winning team to success in
-              hackathon,nurturing innovation,collaboration, and technical
-              excellence to achieve first place honor
-            </p>
-          </div>
-        </div>
+        <% }) %>
+
         <div class="leavebtn">
           <a href="staff-achadd">Add Your Achievement</a>
         </div>
