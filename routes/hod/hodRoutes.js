@@ -3,6 +3,7 @@ const router = express.Router();
 const db = require("../../data/database");
 const multer = require("multer");
 const bcrypt = require("bcryptjs");
+const { ObjectId } = require("mongodb");
 
 let Storege = multer.diskStorage({
   destination: "public/userImg/",
@@ -57,9 +58,6 @@ router.get("/HOD-Attendance", async function (req, res) {
   res.render("hod/HOD-Attendance");
 });
 
-router.get("/HOD-leave", async function (req, res) {
-  res.render("hod/HOD-leave");
-});
 router.get("/HOD-salary", async function (req, res) {
   res.render("hod/HOD-salary");
 });
@@ -196,5 +194,86 @@ router.post(
     }
   }
 );
+
+// Route to fetch leave requests for HOD
+router.get("/HOD-leave", async (req, res) => {
+  try {
+    // Fetch HOD's email from session
+    const hodEmail = req.session.user.email;
+
+    // Fetch HOD's department based on their email
+    const hod = await db
+      .getDb()
+      .collection("HODs")
+      .findOne({ email: hodEmail });
+
+    if (!hod) {
+      return res.status(404).send("HOD not found");
+    }
+
+    const hodDepartment = hod.department;
+
+    // Fetch leave requests only for HOD's department
+    const leaveRequests = await db
+      .getDb()
+      .collection("LeaveRequests")
+      .find({ department: hodDepartment })
+      .toArray();
+
+    // Iterate through each leave request and fetch the corresponding user email
+    for (const request of leaveRequests) {
+      const userEmail = await db
+        .getDb()
+        .collection("StaffMembers")
+        .findOne({ email: request.email }); // Assuming email field contains the user email
+
+      // Add the user email to the leave request object
+      request.userEmail = userEmail;
+    }
+
+    res.render("hod/HOD-leave", {
+      leaveRequests: leaveRequests,
+    });
+  } catch (error) {
+    console.error("Error fetching leave requests:", error);
+    res.status(500).send("Internal server error");
+  }
+});
+
+router.post("/HOD-leave/update-status", async (req, res) => {
+  const email = req.body.email;
+  const status = req.body.status;
+
+  try {
+    if (!email || !status) {
+      throw new Error("Email or status is missing.");
+    }
+
+    // Ensure status is valid
+    if (status !== "approved" && status !== "rejected") {
+      throw new Error("Invalid status.");
+    }
+
+    // Update the status of the leave request
+    const result = await db
+      .getDb()
+      .collection("LeaveRequests")
+      .updateOne(
+        { email: email, status: "pending" },
+        { $set: { status: status } }
+      );
+
+    if (result.modifiedCount === 0) {
+      throw new Error("Leave request not found or not modified");
+    }
+
+    res.redirect("/hod/HOD-leave");
+  } catch (error) {
+    console.error("Error updating leave request status:", error);
+    res.status(500).send("Internal server error");
+  }
+});
+
+
 
 module.exports = router;

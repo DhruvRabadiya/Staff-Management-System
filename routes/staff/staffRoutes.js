@@ -56,13 +56,9 @@ router.get("/staff-achadd", async function (req, res) {
   res.render("staff/staff-achadd");
 });
 
-router.get("/staff-leave", async function (req, res) {
-  res.render("staff/staff-leave");
-});
 
-router.get("/staff-leaveapply", async function (req, res) {
-  res.render("staff/staff-leaveapply");
-});
+
+
 router.get("/staff-event", async function (req, res) {
   res.render("staff/staff-event");
 });
@@ -175,6 +171,88 @@ router.post(
     }
   }
 );
+router.get("/staff-leave", async function (req, res) {
+  try {
+    const userEmail = req.session.user.email;
+
+    // Fetch user details based on the email stored in the session
+    const user = await db
+      .getDb()
+      .collection("StaffMembers")
+      .findOne({ email: userEmail });
+
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    // Fetch current leave status for the user
+    const currentLeaves = await db
+      .getDb()
+      .collection("LeaveRequests")
+      .find({email:userEmail}) // Assuming "Pending" status indicates current leaves
+      .toArray();
+console.log(currentLeaves)
+    // Fetch all past leaves for the user
+    // const pastLeaves = await db
+    //   .getDb()
+    //   .collection("LeaveRequests")
+    //   .find({ userEmail, status: { $ne: "Pending" } }) // Exclude leaves with "Pending" status
+    //   .toArray();
+
+    // Render the staff-leave EJS template with the user, currentLeaves, and pastLeaves arrays
+    res.render("staff/staff-leave", {
+      user,
+      currentLeaves
+    });
+  } catch (error) {
+    console.error("Error fetching leave details:", error);
+    res.status(500).send("Internal server error");
+  }
+});
+
+
+router.get("/staff-leaveapply", async (req, res) => {
+  try {
+    // Check if user is logged in and session contains user information
+    if (!req.session || !req.session.user || !req.session.user.email) {
+      return res.status(401).send("Unauthorized");
+    }
+
+    // Retrieve user email from the session
+    const userEmail = req.session.user.email;
+
+    // Render the leave application form and pass the user email
+    res.render("staff/staff-leaveapply", { userEmail });
+  } catch (error) {
+    console.error("Error rendering leave application form:", error);
+    res.status(500).send("Internal server error");
+  }
+});
+
+// Route to handle leave application submission
+router.post("/staff-leaveapply", async (req, res) => {
+  const { title, fromDate, toDate, reason, leaveType } = req.body;
+  const userEmail = req.session.user.email;
+
+  try {
+    // Save the leave request to the database
+    await db.getDb().collection("LeaveRequests").insertOne({
+      email: userEmail,
+      title: title,
+      fromDate: fromDate,
+      toDate: toDate,
+      reason: reason,
+      leaveType: leaveType,
+      status: "pending", // Set initial status as pending
+    });
+
+    res.redirect("/staff/staff-dashboard"); // Redirect to dashboard after submission
+  } catch (error) {
+    console.error("Error submitting leave request:", error);
+    res.status(500).send("Internal server error");
+  }
+});
+
 // Add more routes for staff functionalities
 
 module.exports = router;

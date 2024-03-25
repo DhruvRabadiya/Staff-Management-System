@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    
     <%- include('../includes/staff-head', { title : "Leave Page"}) %>
     <link rel="stylesheet" href="/styles/staff/employee-leave.css" />
   </head>
@@ -10,59 +9,33 @@
     <div class="main">
       <%- include('../includes/staff-aside') %>
       <div class="main-content">
-        <%- include('../includes/staff-header', { title: 'Leave Request' ,
-        subTitle: 'Managing the Leave' }) %>
+        <%- include('../includes/staff-header', { title: 'Leave Requests',
+        subTitle: 'Managing Leave' }) %>
         <div class="container">
           <div class="tablecontent">
             <table>
-              <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Reason</th>
-                <th>Status</th>
-              </tr>
-              <tr>
-                <td id="same">1</td>
-                <td id="same">Tejas</td>
-                <td id="same">1/1/2024</td>
-                <td id="same">5/1/2024</td>
-                <td id="same">Medical leave</td>
-                <td id="same">Pending</td>
-              </tr>
-              <tr>
-                <td id="same">1</td>
-                <td id="same">Tejas</td>
-                <td id="same">1/1/2024</td>
-                <td id="same">5/1/2024</td>
-                <td id="same">Medical leave</td>
-                <td id="same">Pending</td>
-              </tr>
-              <tr>
-                <td id="same">1</td>
-                <td id="same">Tejas</td>
-                <td id="same">1/1/2024</td>
-                <td id="same">5/1/2024</td>
-                <td id="same">Medical leave</td>
-                <td id="same">Pending</td>
-              </tr>
-              <tr>
-                <td id="same">1</td>
-                <td id="same">Tejas</td>
-                <td id="same">1/1/2024</td>
-                <td id="same">5/1/2024</td>
-                <td id="same">Medical leave</td>
-                <td id="same">Pending</td>
-              </tr>
-              <tr>
-                <td id="same">1</td>
-                <td id="same">Tejas</td>
-                <td id="same">1/1/2024</td>
-                <td id="same">5/1/2024</td>
-                <td id="same">Medical leave</td>
-                <td id="same">Pending</td>
-              </tr>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Title</th>
+                  <th>Start Date</th>
+                  <th>End Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% currentLeaves.forEach(leave => { %>
+                <tr>
+                  <td><%= user._id %></td>
+                  <td><%= user.firstname %> <%= user.lastname %></td>
+                  <td><%= leave.title %></td>
+                  <td><%= leave.fromDate %></td>
+                  <td><%= leave.toDate %></td>
+                  <td><%= leave.status %></td>
+                </tr>
+                <% }); %>
+              </tbody>
             </table>
           </div>
         </div>

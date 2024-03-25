@@ -9,7 +9,7 @@ const db = require("./data/database");
 
 // Create a MongoDB session store
 const store = new MongoDBStore({
-  uri: "mongodb://localhost:27017/session-store",
+  uri: "mongodb://localhost:27017/sms",
   collection: "sessions",
 });
 
