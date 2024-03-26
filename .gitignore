@@ -9,4 +9,3 @@ node_modules/
 
 # Ignore environment files
 .env
-index.js

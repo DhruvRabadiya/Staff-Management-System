@@ -284,7 +284,7 @@ router.get("/HOD-leave", async (req, res) => {
     }
 
     const hodDepartment = hod.department;
-console.log(hodDepartment)
+
     // Fetch leave requests only for HOD's department
     const leaveRequests = await db
       .getDb()

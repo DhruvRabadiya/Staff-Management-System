@@ -325,7 +325,6 @@ router.get("/staff-leave", async function (req, res) {
       .collection("LeaveRequests")
       .find({email:userEmail}) // Assuming "Pending" status indicates current leaves
       .toArray();
-console.log(currentLeaves)
     // Fetch all past leaves for the user
     // const pastLeaves = await db
     //   .getDb()
