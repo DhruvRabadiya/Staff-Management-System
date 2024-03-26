@@ -21,7 +21,7 @@ store.on("error", function (error) {
 // Session middleware
 app.use(
   session({
-    secret: "your-secret-key",
+    secret: "2a12LJDKYRBuq27DPLK4e3F4vOrSsAdbUnGteNcux9hCMEQK23OXBm7lu",
     resave: false,
     saveUninitialized: false,
     store: store,

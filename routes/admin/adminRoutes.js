@@ -17,32 +17,54 @@ let upload = multer({
 });
 
 router.get("/admin-dashboard", async function (req, res) {
-  // if (!req.session.isAuthenticated) {
-  //   return res.status(401).render("401");
-  // }
   const userEmail = req.session.user.email;
 
-  // Fetch admin data based on the email of the user
-  const admin = await db
-    .getDb()
-    .collection("Admins")
-    .findOne({ email: userEmail });
+  try {
+    // Fetch admin data based on the email of the user
+    const admin = await db
+      .getDb()
+      .collection("Admins")
+      .findOne({ email: userEmail });
 
-  // if (!user || (user.role !== "admin" && user.role !== "staff")) {
-  //   return res.status(403).render("403");
-  // }
+    const adminName = admin.username;
 
-  const adminName = admin.username;
-  const staffCount = await db
-    .getDb()
-    .collection("Users")
-    .countDocuments({ role: { $ne: "admin" } });
+    // Query total number of achievements
+    const totalAchievements = await db
+      .getDb()
+      .collection("Achievements")
+      .estimatedDocumentCount();
 
-  res.render("admin/admin-dashboard", {
-    adminName: adminName,
-    staffCount: staffCount,
-  });
+    // Query total number of staff members
+    const staffCount = await db
+      .getDb()
+      .collection("Users")
+      .countDocuments({ role: { $ne: "admin" } });
+
+    // Query upcoming events
+    const currentDate = new Date();
+    const upcomingEvents = await db
+      .getDb()
+      .collection("Events")
+      .find()
+      .toArray();
+
+    const filteredEvents = upcomingEvents.filter(event => {
+      const eventDate = new Date(event.date);
+      return eventDate >= currentDate;
+    });
+
+    res.render("admin/admin-dashboard", {
+      adminName: adminName,
+      totalAchievements: totalAchievements,
+      staffCount: staffCount,
+      upcomingEvents: filteredEvents,
+    });
+  } catch (error) {
+    console.error("Error fetching admin data:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
+
 
 router.get("/staff-member", async function (req, res) {
   const userEmail = req.session.user.email;
@@ -315,26 +337,82 @@ router.post("/admin-addevent", async function (req, res) {
 });
 
 router.get("/admin-department", async function (req, res) {
-  const userEmail = req.session.user.email;
+  try {
+    const userEmail = req.session.user.email;
 
-  // Fetch admin data based on the email of the user
-  const admin = await db
-    .getDb()
-    .collection("Admins")
-    .findOne({ email: userEmail });
-  const adminName = admin.username;
-  res.render("admin/admin-department", { adminName: adminName });
+    // Fetch admin data based on the email of the user
+    const admin = await db
+      .getDb()
+      .collection("Admins")
+      .findOne({ email: userEmail });
+
+    const adminName = admin.username;
+
+    // Fetch department data from the database
+    const departments = await db
+      .getDb()
+      .collection("Departments")
+      .find()
+      .toArray();
+
+    res.render("admin/admin-department", {
+      adminName: adminName,
+      departments: departments,
+    });
+  } catch (error) {
+    console.error("Error fetching department data:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
+// Router
 router.get("/admin-salary", async function (req, res) {
   const userEmail = req.session.user.email;
 
-  // Fetch admin data based on the email of the user
-  const admin = await db
-    .getDb()
-    .collection("Admins")
-    .findOne({ email: userEmail });
-  const adminName = admin.username;
-  res.render("admin/admin-salary", { adminName: adminName });
+  try {
+    // Fetch admin data based on the email of the user
+    const admin = await db
+      .getDb()
+      .collection("Admins")
+      .findOne({ email: userEmail });
+
+    // Aggregate salary data for all users from different collections
+    const users = await db
+      .getDb()
+      .collection("Principal")
+      .aggregate([
+        { $unionWith: { coll: "HODs" } },
+        { $unionWith: { coll: "StaffMembers" } },
+        {
+          $project: {
+            name: { $concat: ["$firstname", " ", "$lastname"] },
+            salary: { $toDouble: "$salary" }, // Convert string to number
+            role: 1, // Include the role
+            department: 1, // Include the department
+            AGP: { $literal: 5000 }, // Assumed AGP value
+            DA: { $multiply: [0.1, { $toDouble: "$salary" }] }, // Calculate DA: 10% of base salary
+            HRA: { $multiply: [0.05, { $toDouble: "$salary" }] }, // Calculate HRA: 5% of base salary
+            otherSalary: { $multiply: [0.02, { $toDouble: "$salary" }] }, // Calculate other components: 2% of base salary
+          },
+        },
+        {
+          $set: {
+            totalSalary: {
+              $sum: ["$salary", "$AGP", "$DA", "$HRA", "$otherSalary"],
+            }, // Calculate total salary
+          },
+        },
+      ])
+      .toArray();
+
+    const adminName = admin.username;
+    res.render("admin/admin-salary", { adminName: adminName, users: users });
+  } catch (error) {
+    console.error("Error fetching and aggregating salary data:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
+
+
+
 module.exports = router;
