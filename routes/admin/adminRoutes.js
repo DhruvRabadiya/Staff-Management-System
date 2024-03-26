@@ -1,10 +1,12 @@
 // routes/admin/adminRoutes.js
+const path = require("path")
 const express = require("express");
 const router = express.Router();
 const db = require("../../data/database");
 const multer = require("multer");
 const bcrypt = require("bcryptjs");
-
+const xlsx = require("xlsx");
+const moment = require("moment");
 let Storege = multer.diskStorage({
   destination: "public/userImg/",
   filename: (req, file, cb) => {
@@ -155,18 +157,82 @@ router.get("/admin-achievement", async function (req, res) {
     res.status(500).send("Internal Server Error");
   }
 });
-
 router.get("/admin-attendance", async function (req, res) {
-  const userEmail = req.session.user.email;
+  try {
+    const userEmail = req.session.user.email;
 
-  // Fetch admin data based on the email of the user
-  const admin = await db
-    .getDb()
-    .collection("Admins")
-    .findOne({ email: userEmail });
-  const adminName = admin.username;
-  res.render("admin/admin-attendance", { adminName: adminName });
+    // Fetch admin data based on the email of the user
+    const admin = await db
+      .getDb()
+      .collection("Admins")
+      .findOne({ email: userEmail });
+    const adminName = admin.username;
+    const publicFolderPath = path.join(__dirname, "../../public");
+
+    // Construct the file path to the attendance.xlsx file
+    const filePath = path.join(publicFolderPath, "attendance.xlsx");
+
+    // Read the Excel file from the server filesystem
+    const workbook = xlsx.readFile(filePath);
+    const sheetName = workbook.SheetNames[0];
+    const attendanceData = xlsx.utils.sheet_to_json(
+      workbook.Sheets[sheetName],
+      { dateNF: "YYYY-MM-DD" }
+    );
+
+    // Process the attendance data to calculate Total Time and determine Status
+    const processedData = attendanceData.map((entry) => {
+      // Parse the date using moment.js and format it as "DD-MM-YYYY"
+      const date = moment(entry.Date).format("DD-MM-YYYY");
+
+      // Calculate Total Time
+      const inTime = moment(entry["In Time"], "hh:mm A");
+      const outTime = moment(entry["Out Time"], "hh:mm A");
+      let totalTime = "0hrs"; // Initialize total time
+      let hours = 0; // Initialize hours
+
+      // Calculate Total Time only if both inTime and outTime are valid
+      if (inTime.isValid() && outTime.isValid()) {
+        const duration = moment.duration(outTime.diff(inTime));
+        hours = Math.floor(duration.asHours());
+        const minutes = Math.floor(duration.asMinutes()) % 60;
+        totalTime = hours + "hrs " + minutes + "mins";
+      }
+
+      // Determine Status based on Total Time
+      let status = "Absent";
+      if (totalTime !== "0hrs") {
+        status = "Present";
+        if (hours < 8) {
+          status = "Half Present";
+        }
+        if (hours < 4) {
+          status = "Absent";
+        }
+      }
+
+      return {
+        Date: date,
+        Name: entry.Name,
+        Email: entry.Email,
+        "In Time": entry["In Time"],
+        "Out Time": entry["Out Time"],
+        "Total Time": totalTime,
+        Status: status,
+      };
+    });
+
+    // Render the attendance page with the processed data
+    res.render("admin/admin-attendance", {
+      attendanceData: processedData,
+      adminName: adminName,
+    });
+  } catch (error) {
+    console.error("Error reading Excel file:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
+
 router.get("/admin-leave", async function (req, res) {
   const userEmail = req.session.user.email;
   try {

@@ -1,7 +1,8 @@
+<!-- admin-attendance.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <%- include('../includes/admin-head',{ title : "Attendance"})%>
+    <%- include('../includes/admin-head',{ title : "Attendance"})%>
     <link rel="stylesheet" href="/styles/admin/AdminAttendance.css">
 </head>
 <body>
@@ -13,46 +14,29 @@
             <div class="tablecontent">
                 <table>
                     <tr>
-                        <th>ID</th>
                         <th>Date</th>
                         <th>Name</th>
-                        <TH>In Time</TH>
+                        <th>Email</th>
+                        <th>In Time</th>
                         <th>Out Time</th>
-                        <TH>Total Time</TH>
+                        <th>Total Time</th>
                         <th>Status</th>
                     </tr>
-                    <tr>
-                        <td id="same">1</td>
-                        <td id="same">1/2/24</td>
-                        <td>Tejas</td>
-                        <td id="same">9:00am</td>
-                        <td id="same">5:00pm</td>
-                        <td id="same">8hrs</td>
-                        <td>Present</td>
-                    </tr>
-                    <tr>
-                        <td id="same">2</td>
-                        <td id="same">1/2/24</td>
-                        <td>Priya</td>
-                        <td id="same"> -</td>
-                        <td id="same"> - </td>
-                        <td id="same">0hrs</td>
-                        <td>Absent</td>
-                    </tr>
-                    <tr>
-                        <td id="same">3</td>
-                        <td id="same">1/2/24</td>
-                        <td>Vikrant</td>
-                        <td id="same">9:05 am</td>
-                        <td id="same">5:05 pm</td>
-                        <td id="same">8 hrs </td>
-                        <td>Present</td>
-                    </tr>
+                    <% attendanceData.forEach(entry => { %>
+                        <tr>
+                            <td><%= entry.Date %></td>
+                            <td><%= entry.Name %></td>
+                            <td><%= entry.Email %></td>
+                            <td><%= entry["In Time"] %></td>
+                            <td><%= entry["Out Time"] %></td>
+                            <td><%= entry["Total Time"] %></td>
+                            <td><%= entry.Status %></td>
+                        </tr>
+                    <% }); %>
                 </table>
             </div>
         </div>
-          </div>
+        </div>
     </div>
-    
 </body>
 </html>
