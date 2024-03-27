@@ -17,66 +17,20 @@
               <tr>
                 <th>Sr.No.</th>
                 <th>Department Name</th>
-                <TH>HOD Name</TH>
+                <th>HOD Name</th>
                 <th>Contact No.</th>
-                <TH>Email</TH>
+                <th>Email</th>
+              
               </tr>
+              <% departments.forEach((department, index) => { %>
               <tr>
-                <td id="same">1</td>
-                <td>Information Technology</td>
-                <td>Jay Dhumale</td>
-                <td id="same">9924875411</td>
-                <td id="same">dhumale@gmail.com</td>
+                <td><%= index + 1 %></td>
+                <td><%= department.name %></td>
+                <td><%= department.members[0].firstname %> <%= department.members[0].lastname %></td>
+                <td><%= department.members[0].phonenumber %></td>
+                <td><%= department.members[0].email %></td>
               </tr>
-              <tr>
-                <td id="same">2</td>
-                <td>Computer Science</td>
-                <td>Jenil Patil</td>
-                <td id="same">9973322421</td>
-                <td id="same">patil@gmail.com</td>
-              </tr>
-              <tr>
-                <td id="same">3</td>
-                <td>Computer Science and Designing</td>
-                <td>Neeraj Phadke</td>
-                <td id="same">9723375421</td>
-                <td id="same">phadke@gmail.com</td>
-              </tr>
-              <tr>
-                <td id="same">4</td>
-                <td>Artificial Intelligence</td>
-                <td>Darshit Yadav</td>
-                <td id="same">9054090540</td>
-                <td id="same">yadavkosamba@gmail.com</td>
-              </tr>
-              <tr>
-                <td id="same">5</td>
-                <td>Food Processing Technology</td>
-                <td>Fenil Patel</td>
-                <td id="same">9500595005</td>
-                <td id="same">patelf@gmail.com</td>
-              </tr>
-              <tr>
-                <td id="same">6</td>
-                <td>Mechanical Department</td>
-                <td>Aarsh Patel</td>
-                <td id="same">9876598765</td>
-                <td id="same">arshp@gmail.com</td>
-              </tr>
-              <tr>
-                <td id="same">7</td>
-                <td>Automobile Department</td>
-                <td>Parth Patel</td>
-                <td id="same">7654376543</td>
-                <td id="same">parth@gmail.com</td>
-              </tr>
-              <tr>
-                <td id="same">8</td>
-                <td>Civil Department</td>
-                <td>Dhruv Rabadiya</td>
-                <td id="same">9998899988</td>
-                <td id="same">diya@gmail.com</td>
-              </tr>
+              <% }) %>
             </table>
           </div>
         </div>

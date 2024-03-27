@@ -9,56 +9,31 @@
     <div class="main">
         <%- include('../includes/principal-aside') %>
         <div class="main-content">
-        <%- include('../includes/principal-header', { title: 'Staff Salary' , subTitle: 'Managing Staff Salary' }) %>
+        <%- include('../includes/principal-header', { title: 'Your Salary' , subTitle: '' }) %>
         <div class="container">
             <div class="tablecontent">
                 <table>
-                    <tr>
-                        <th>ID</th>
-                        <th>NAME</th>
-                        <TH>Basic Salary</TH>
-                        <th>D.A Salary</th>
-                        <TH>H.R.A Salary</th>
-                        <th>Other</th>
-                        <th>Total Salary</th>
-                    </tr>
-                    <tr>
-                        <td id="same">1</td>
-                        <td>Tejas</td>
-                        <td id="same">65000</td>
-                        <td id="same">3000</td>
-                        <td id="same">2000</td>
-                        <td id="same">2000</td>
-                        <td id="same">72000</td>
-                    </tr>
-                    <tr>
-                        <td id="same">2</td>
-                        <td>Priya</td>
-                        <td id="same">60000</td>
-                        <td id="same">2000</td>
-                        <td id="same">2000</td>
-                        <td id="same">2000</td>
-                        <td id="same">66000</td>
-                    </tr>
-                    <tr>
-                        <td id="same">3</td>
-                        <td>Vikrant</td>
-                        <td id="same">65000</td>
-                        <td id="same">3000</td>
-                        <td id="same">2000</td>
-                        <td id="same">2000</td>
-                        <td id="same">72000</td>
-                    </tr> 
-                    <tr>
-                        <td id="same">3</td>
-                        <td>Vikrant</td>
-                        <td id="same">65000</td>
-                        <td id="same">3000</td>
-                        <td id="same">2000</td>
-                        <td id="same">2000</td>
-                        <td id="same">72000</td>
-                    </tr>    
-                </table>
+              <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Basic Salary</th>
+                <th>A.G.P Salary</th>
+                <th>D.A Salary</th>
+                <th>H.R.A Salary</th>
+                <th>Other Salary</th>
+                <th>Total Salary</th>
+              </tr>
+              <tr>
+                <td id="same">1</td>
+                <td id="same"><%= staffSalary.name %></td>
+                <td id="same"><%= staffSalary.salary.basic %></td>
+                <td id="same"><%= staffSalary.salary.agp %></td>
+                <td id="same"><%= staffSalary.salary.da %></td>
+                <td id="same"><%= staffSalary.salary.hra %></td>
+                <td id="same"><%= staffSalary.salary.other %></td>
+                <td id="same"><%= staffSalary.salary.total %></td>
+              </tr>
+            </table>
             </div>
         </div>
     </div>

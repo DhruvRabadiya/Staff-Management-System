@@ -24,14 +24,82 @@ const achievementStorage = multer.diskStorage({
 });
 
 const uploadAchievementPhoto = multer({ storage: achievementStorage });
+
+async function getStaffDetails(email) {
+  try {
+    const staff = await db
+      .getDb()
+      .collection("StaffMembers")
+      .findOne({ email: email });
+
+    if (staff) {
+      return {
+        staffName: `${staff.firstname} ${staff.lastname}`.trim(),
+        userPhoto: staff.userphoto || "", // Default to empty string if userphoto is not available
+      };
+    } else {
+      return { staffName: "Staff Member", userPhoto: "" };
+    }
+  } catch (error) {
+    console.error("Error fetching staff details:", error);
+    return { staffName: "Staff Member", userPhoto: "" };
+  }
+}
+
+
 router.get("/staff-dashboard", async function (req, res) {
-  res.render("staff/staff-dashboard");
+  try {
+      const userEmail = req.session.user.email;
+
+      const { staffName, userPhoto } = await getStaffDetails(userEmail);
+
+    // Fetch staff member details
+    const staffMember = await db
+      .getDb()
+      .collection("StaffMembers")
+      .findOne({ email: userEmail });
+
+    if (!staffMember) {
+      return res.status(404).send("Staff member not found");
+    }
+
+    // Fetch latest achievement
+    const latestAchievement = await db
+      .getDb()
+      .collection("Achievements")
+      .findOne({ email: userEmail }, {}, { sort: { createdAt: -1 } });
+
+    // Fetch current leave request
+    const currentLeaveRequest = await db
+      .getDb()
+      .collection("LeaveRequests")
+      .findOne({ email: userEmail, status: "pending" });
+
+    // Fetch salary
+    const salary = staffMember.salary; // Assuming salary is stored directly in the staff member document
+
+    res.render("staff/staff-dashboard", {
+      staffMember,
+      userPhoto,
+      staffName,
+      latestAchievement,
+      currentLeaveRequest,
+      salary,
+    });
+  } catch (error) {
+    console.error("Error fetching staff dashboard data:", error);
+    res.status(500).send("Internal server error");
+  }
 });
+
 
 
 router.get("/staff-salary", async function (req, res) {
   try {
     const userEmail = req.session.user.email;
+
+    const { staffName, userPhoto } = await getStaffDetails(userEmail);
+
 
     const staffMember = await db
       .getDb()
@@ -66,10 +134,16 @@ router.get("/staff-salary", async function (req, res) {
         hra: HRA,
         other: otherSalary,
         total: totalSalary,
+        userPhoto,
+        staffName,
       },
     };
 
-    res.render("staff/staff-salary", { staffSalary: staffSalary });
+    res.render("staff/staff-salary", {
+      staffSalary: staffSalary,
+      staffName,
+      userPhoto,
+    });
   } catch (error) {
     console.error("Error fetching staff salary:", error);
     res.status(500).send("Internal Server Error");
@@ -80,7 +154,10 @@ router.get("/staff-salary", async function (req, res) {
 
 router.get("/staff-profile", async function (req, res) {
   try {
-    const userEmail = req.session.user.email;
+  const userEmail = req.session.user.email;
+
+  const { staffName, userPhoto } = await getStaffDetails(userEmail);
+
     const user = await db
       .getDb()
       .collection("StaffMembers")
@@ -95,7 +172,12 @@ router.get("/staff-profile", async function (req, res) {
       .collection("Departments")
       .findOne({ "members.email": userEmail });
 
-    res.render("staff/staff-profile", { user: user  , department:department});
+    res.render("staff/staff-profile", {
+      user: user,
+      department: department,
+      userPhoto,
+      staffName,
+    });
   } catch (error) {
     console.error("Error fetching user details:", error);
     res.status(500).send("Internal server error");
@@ -103,11 +185,20 @@ router.get("/staff-profile", async function (req, res) {
 });
 
 router.get("/staff-updprof", async function (req, res) {
-  res.render("staff/staff-updprof");
+  const userEmail = req.session.user.email;
+
+  const { staffName, userPhoto } = await getStaffDetails(userEmail);
+
+  res.render("staff/staff-updprof", {
+    staffName,
+    userPhoto,
+  });
 });
 router.get("/staff-ach", async function (req, res) {
   try {
-    const userEmail = req.session.user.email;
+   const userEmail = req.session.user.email;
+
+   const { staffName, userPhoto } = await getStaffDetails(userEmail);
 
     const staffAchievements = await db
       .getDb()
@@ -124,6 +215,8 @@ router.get("/staff-ach", async function (req, res) {
     res.render("staff/staff-ach", {
       staffAchievements: staffAchievements,
       otherAchievements: otherAchievements,
+      userPhoto,
+      staffName,
     });
   } catch (error) {
     console.error("Error fetching achievements:", error);
@@ -132,7 +225,13 @@ router.get("/staff-ach", async function (req, res) {
 });
 
 router.get("/staff-achadd", async function (req, res) {
-  res.render("staff/staff-achadd");
+  const userEmail = req.session.user.email;
+
+  const { staffName, userPhoto } = await getStaffDetails(userEmail);
+  res.render("staff/staff-achadd", {
+    userPhoto,
+    staffName,
+  });
 });
 
 router.post(
@@ -176,16 +275,17 @@ router.post(
 
 router.get("/staff-event", async function (req, res) {
 try {
+  const userEmail = req.session.user.email;
+
+  const { staffName, userPhoto } = await getStaffDetails(userEmail);
   const events = await db.getDb().collection("Events").find().toArray();
 
-  res.render("staff/staff-event", { events: events });
+  res.render("staff/staff-event", { events: events, staffName, userPhoto });
 } catch (error) {
   console.error("Error fetching events:", error);
 }
 });
-router.get("/staff-salary", async function (req, res) {
-  res.render("staff/staff-salary");
-});
+
 
 router.post(
   "/staff-updprof",
@@ -294,7 +394,9 @@ router.post(
 );
 router.get("/staff-leave", async function (req, res) {
   try {
-    const userEmail = req.session.user.email;
+  const userEmail = req.session.user.email;
+
+  const { staffName, userPhoto } = await getStaffDetails(userEmail);
 
     const user = await db
       .getDb()
@@ -314,7 +416,9 @@ router.get("/staff-leave", async function (req, res) {
     
     res.render("staff/staff-leave", {
       user,
-      currentLeaves
+      currentLeaves,
+      staffName,
+      userPhoto,
     });
   } catch (error) {
     console.error("Error fetching leave details:", error);
@@ -325,14 +429,16 @@ router.get("/staff-leave", async function (req, res) {
 
 router.get("/staff-leaveapply", async (req, res) => {
   try {
-   
+   const userEmail = req.session.user.email;
+
+   const { staffName, userPhoto } = await getStaffDetails(userEmail);
     if (!req.session || !req.session.user || !req.session.user.email) {
       return res.status(401).send("Unauthorized");
     }
 
-    const userEmail = req.session.user.email;
 
-    res.render("staff/staff-leaveapply", { userEmail });
+
+    res.render("staff/staff-leaveapply", { userEmail, staffName, userPhoto });
   } catch (error) {
     console.error("Error rendering leave application form:", error);
     res.status(500).send("Internal server error");
@@ -344,7 +450,11 @@ router.post("/staff-leaveapply", async (req, res) => {
   const userEmail = req.session.user.email;
 
   try {
-    const dept = await db.getDb().collection("StaffMembers").findOne(userEmail)
+   const dept = await db
+     .getDb()
+     .collection("StaffMembers")
+     .findOne({ email: userEmail });
+
     await db.getDb().collection("LeaveRequests").insertOne({
       email: userEmail,
       title: title,

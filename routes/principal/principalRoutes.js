@@ -97,12 +97,28 @@ router.get("/Principal-Achievement", async function (req, res) {
 });
 
 router.get("/principal-department", async function (req, res) {
-   const userEmail = req.session.user.email;
-   const { principalName, userPhoto } = await getPrincipalDetails(userEmail);
-  res.render("principal/principal-department", {
-    principalName: principalName,
-    userPhoto: userPhoto,
-  });
+
+   try {
+     const userEmail = req.session.user.email;
+     const { principalName, userPhoto } = await getPrincipalDetails(userEmail);
+
+     const departments = await db
+       .getDb()
+       .collection("Departments")
+       .find()
+       .toArray();
+
+     res.render("principal/principal-department", {
+       principalName: principalName,
+       userPhoto: userPhoto,
+       departments: departments,
+     });
+   } catch (error) {
+     console.error("Error fetching department data:", error);
+     res.status(500).send("Internal Server Error");
+   }
+  
+  
 });
 
 router.get("/principal-leave", async function (req, res) {
@@ -132,12 +148,56 @@ router.get("/principal-events", async function (req, res) {
 });
 
 router.get("/principal-salary", async function (req, res) {
+
+
+ try {
    const userEmail = req.session.user.email;
    const { principalName, userPhoto } = await getPrincipalDetails(userEmail);
-  res.render("principal/principal-salary", {
-    principalName: principalName,
-    userPhoto: userPhoto,
-  });
+   const staffMember = await db
+     .getDb()
+     .collection("Principal")
+     .findOne({ email: userEmail });
+
+   // Convert salary string to number
+   const baseSalary = parseFloat(staffMember.salary);
+
+   // Check if the conversion was successful
+   if (isNaN(baseSalary)) {
+     throw new Error("Invalid salary format in the database");
+   }
+
+   // Calculate A.G.P (Assuming it's a fixed amount)
+   const AGP = 5000; // Example: A.G.P is 5000
+
+   // Calculate other components based on the base salary
+   const DA = 0.1 * baseSalary; // Example: 10% of base salary for D.A
+   const HRA = 0.05 * baseSalary; // Example: 5% of base salary for HRA
+   const otherSalary = 0.02 * baseSalary; // Example: 2% of base salary for other components
+
+   // Calculate total salary
+   const totalSalary = baseSalary + AGP + DA + HRA + otherSalary;
+
+   const staffSalary = {
+     name: `${staffMember.firstname} ${staffMember.lastname}`,
+     salary: {
+       basic: baseSalary,
+       agp: AGP,
+       da: DA,
+       hra: HRA,
+       other: otherSalary,
+       total: totalSalary,
+     },
+   };
+
+   res.render("principal/principal-salary", {
+     staffSalary: staffSalary,
+     principalName: principalName,
+     userPhoto: userPhoto,
+   });
+ } catch (error) {
+   console.error("Error fetching staff salary:", error);
+   res.status(500).send("Internal Server Error");
+ }
 });
 
 router.get("/principal-profile", async function (req, res) {

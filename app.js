@@ -65,6 +65,22 @@ app.get("/aboutUs", function (req, res) {
 app.get("/contactUs", function (req, res) {
   res.render("contactUs");
 });
+
+app.post("/contactUs", async  function (req, res) {
+  try {
+    const {name , email, message} = req.body
+
+    const contact = {
+      name: name,
+      email : email, 
+      message: message,
+    };
+    
+    
+    await db.getDb().collection("contactUs").insertOne(contact);
+  } catch {}
+  res.render("contactUs");
+});
 app.get("/logIn", function (req, res) {
   res.render("logIn");
 });

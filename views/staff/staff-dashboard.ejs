@@ -13,25 +13,20 @@
         'Welcome To Your Dashboard' }) %>
         <div class="container0">
           <h3>Department</h3>
-          <p>Information Technology</p>
+          <p><%= staffMember.department %></p>
         </div>
         <div class="top-container">
           <div class="container1">
-            <h3>Achievement</h3>
-            <p>Mentorship Award</p>
-            <p id="container-ach">
-              Guided and inspiring the Winning team to success in
-              hackathon,nurturing innovation,collaboration, and technical
-              excellence to achieve first place honor
-            </p>
+            <h3>Latest Achievement</h3>
+            <p><%= latestAchievement ? latestAchievement.description : 'No achievement yet' %></p>
           </div>
           <div class="container2">
-            <h3>Leave Request</h3>
-            <p>Medical Leave</p>
+            <h3>Current Leave Request</h3>
+            <p><%= currentLeaveRequest ? currentLeaveRequest.title : 'No current leave request' %></p>
           </div>
           <div class="container3">
             <h3>Salary</h3>
-            <p>60000</p>
+            <p><%= salary %></p>
           </div>
         </div>
       </div>

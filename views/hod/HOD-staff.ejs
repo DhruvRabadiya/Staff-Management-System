@@ -13,7 +13,6 @@
                 <div class="tablecontent">
                     <table>
                         <tr>
-                            <th><input type="checkbox"></th>
                             <th>ID</th>
                             <th>NAME</th>
                             <th>AGE</th>
@@ -23,7 +22,6 @@
                         </tr>
                         <% staffMembers.forEach(function(staffMember, index) { %>
                             <tr>
-                                <td id="same"><input type="checkbox"></td>
                                 <td id="same"><%= index + 1 %></td>
                                 <td><%= staffMember.firstname %></td>
                                 <td id="same"><%= staffMember.dateofbirth %></td>
