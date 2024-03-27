@@ -13,17 +13,80 @@ let Storege = multer.diskStorage({
 let upload = multer({
   storage: Storege,
 });
+
+async function getHODDetails(email) {
+  try {
+    const hod = await db.getDb().collection("HODs").findOne({ email: email });
+
+    if (hod) {
+      return {
+        hodName: `${hod.firstname} ${hod.lastname}`.trim(),
+        department: hod.department || "",
+        userPhoto: hod.userphoto || "", // Default to empty string if userphoto is not available
+      };
+    } else {
+      return { hodName: "H.O.D", department: "", userPhoto: "" };
+    }
+  } catch (error) {
+    console.error("Error fetching H.O.D details:", error);
+    return { hodName: "H.O.D", department: "", userPhoto: "" };
+  }
+}
+
+
+
 router.get("/hod-dashboard", async function (req, res) {
-  res.render("hod/hod-dashboard");
+  try {
+    const userEmail = req.session.user.email;
+
+    // Fetch H.O.D details
+    const { hodName, department, userPhoto } = await getHODDetails(userEmail);
+
+    // Fetch upcoming events and leave requests
+    const currentDate = new Date().toISOString(); // Current date in ISO string format
+   const upcomingEventsCount = await db
+     .getDb()
+     .collection("Events")
+     .countDocuments({ date: { $gte: currentDate } });
+
+    let pendingLeaveCount = 0; // Initialize pending leave count
+
+    // Check if there are any pending leave requests
+    const pendingLeaveRequests = await db
+      .getDb()
+      .collection("LeaveRequests")
+      .find({ status: "pending" })
+      .toArray();
+
+    if (pendingLeaveRequests && pendingLeaveRequests.length > 0) {
+      // If there are pending leave requests, fetch the count
+      pendingLeaveCount = pendingLeaveRequests.length;
+    }
+
+    // Render the H.O.D dashboard with the fetched data
+    res.render("hod/hod-dashboard", {
+      hodName: hodName,
+      department: department,
+      userPhoto: userPhoto,
+      upcomingEventsCount: upcomingEventsCount,
+      pendingLeaveCount: pendingLeaveCount,
+    });
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 router.get("/HOD-staff", async function (req, res) {
   try {
-    const hodEmail = req.session.user.email;
+    const userEmail = req.session.user.email;
+
+    // Fetch H.O.D details
+    const { hodName, department, userPhoto } = await getHODDetails(userEmail);
 
     const hod = await db
       .getDb()
       .collection("HODs")
-      .findOne({ email: hodEmail });
+      .findOne({ email: userEmail });
 
     if (!hod) {
       return res.status(404).send("HOD not found");
@@ -37,7 +100,12 @@ router.get("/HOD-staff", async function (req, res) {
       .find({ department: hodDepartment })
       .toArray();
 
-    res.render("hod/HOD-staff", { staffMembers: staffMembers });
+    res.render("hod/HOD-staff", {
+      staffMembers: staffMembers,
+      hodName: hodName,
+      department: department,
+      userPhoto: userPhoto,
+    });
   } catch (error) {
     console.error("Error fetching staff members:", error);
     res.status(500).send("Internal server error");
@@ -45,13 +113,22 @@ router.get("/HOD-staff", async function (req, res) {
 });
 router.get("/HOD-ach", async function (req, res) {
   try {
+    const userEmail = req.session.user.email;
+
+    // Fetch H.O.D details
+    const { hodName, department, userPhoto } = await getHODDetails(userEmail);
     const achievements = await db
       .getDb()
       .collection("Achievements")
       .find({})
       .toArray();
 
-    res.render("hod/HOD-ach", { achievements: achievements });
+    res.render("hod/HOD-ach", {
+      achievements: achievements,
+      hodName: hodName,
+      department: department,
+      userPhoto: userPhoto,
+    });
   } catch (error) {
     console.error("Error fetching achievements:", error);
     res.status(500).send("Internal Server Error");
@@ -60,9 +137,18 @@ router.get("/HOD-ach", async function (req, res) {
 
 router.get("/HOD-event", async function (req, res) {
   try {
+    const userEmail = req.session.user.email;
+
+    // Fetch H.O.D details
+    const { hodName, department, userPhoto } = await getHODDetails(userEmail);
     const events = await db.getDb().collection("Events").find().toArray();
 
-    res.render("hod/HOD-event", { events: events });
+    res.render("hod/HOD-event", {
+      events: events,
+      hodName: hodName,
+      department: department,
+      userPhoto: userPhoto,
+    });
   } catch (error) {
     console.error("Error fetching events:", error);
     res.status(500).send("Internal Server Error");
@@ -70,12 +156,23 @@ router.get("/HOD-event", async function (req, res) {
 });
 
 router.get("/HOD-Attendance", async function (req, res) {
-  res.render("hod/HOD-Attendance");
+  const userEmail = req.session.user.email;
+
+  // Fetch H.O.D details
+  const { hodName, department, userPhoto } = await getHODDetails(userEmail);
+  res.render("hod/HOD-Attendance", {
+    hodName: hodName,
+    department: department,
+    userPhoto: userPhoto,
+  });
 });
 
 router.get("/HOD-salary", async function (req, res) {
   try {
-    const userEmail = req.session.user.email;
+   const userEmail = req.session.user.email;
+
+   // Fetch H.O.D details
+   const { hodName, department, userPhoto } = await getHODDetails(userEmail);
 
     const staffMember = await db
       .getDb()
@@ -113,7 +210,12 @@ router.get("/HOD-salary", async function (req, res) {
       },
     };
 
-    res.render("hod/HOD-salary", { staffSalary: staffSalary });
+    res.render("hod/HOD-salary", {
+      staffSalary: staffSalary,
+      hodName: hodName,
+      department: department,
+      userPhoto: userPhoto,
+    });
   } catch (error) {
     console.error("Error fetching staff salary:", error);
     res.status(500).send("Internal Server Error");
@@ -122,7 +224,10 @@ router.get("/HOD-salary", async function (req, res) {
 
 router.get("/HOD-profile", async function (req, res) {
   try {
-    const userEmail = req.session.user.email;
+   const userEmail = req.session.user.email;
+
+   // Fetch H.O.D details
+   const { hodName, userPhoto } = await getHODDetails(userEmail);
     const user = await db
       .getDb()
       .collection("HODs")
@@ -137,14 +242,28 @@ router.get("/HOD-profile", async function (req, res) {
       .collection("Departments")
       .findOne({ "members.email": userEmail });
 
-    res.render("hod/HOD-profile", { user: user, department: department });
+    res.render("hod/HOD-profile", {
+      user: user,
+      department: department,
+      hodName: hodName,
+    
+      userPhoto: userPhoto,
+    });
   } catch (error) {
     console.error("Error fetching user details:", error);
     res.status(500).send("Internal server error");
   }
 });
 router.get("/HOD-updprof", async function (req, res) {
-  res.render("hod/HOD-updprof");
+  const userEmail = req.session.user.email;
+
+  // Fetch H.O.D details
+  const { hodName, department, userPhoto } = await getHODDetails(userEmail);
+  res.render("hod/HOD-updprof", {
+    hodName: hodName,
+    department: department,
+    userPhoto: userPhoto,
+  });
 });
 
 router.post(
@@ -255,12 +374,15 @@ router.post(
 
 router.get("/HOD-leave", async (req, res) => {
   try {
-    const hodEmail = req.session.user.email;
+   const userEmail = req.session.user.email;
+
+   // Fetch H.O.D details
+   const { hodName, department, userPhoto } = await getHODDetails(userEmail);
 
     const hod = await db
       .getDb()
       .collection("HODs")
-      .findOne({ email: hodEmail });
+      .findOne({ email: userEmail });
 
     if (!hod) {
       return res.status(404).send("HOD not found");
@@ -287,6 +409,9 @@ router.get("/HOD-leave", async (req, res) => {
 
     res.render("hod/HOD-leave", {
       leaveRequests: leaveRequests,
+      hodName: hodName,
+      department: department,
+      userPhoto: userPhoto,
     });
   } catch (error) {
     console.error("Error fetching leave requests:", error);
