@@ -1,6 +1,7 @@
 // routes/admin/adminRoutes.js
 const path = require("path")
 const express = require("express");
+const { getJsDateFromExcel } = require("excel-date-to-js");
 const router = express.Router();
 const db = require("../../data/database");
 const multer = require("multer");
@@ -175,23 +176,23 @@ router.get("/admin-attendance", async function (req, res) {
     // Read the Excel file from the server filesystem
     const workbook = xlsx.readFile(filePath);
     const sheetName = workbook.SheetNames[0];
-    const attendanceData = xlsx.utils.sheet_to_json(
-      workbook.Sheets[sheetName],
-      { dateNF: "YYYY-MM-DD" }
-    );
+    const attendanceData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
-    // Process the attendance data to calculate Total Time and determine Status
+    // Process the attendance data
     const processedData = attendanceData.map((entry) => {
-      // Parse the date using moment.js and format it as "DD-MM-YYYY"
-      const date = moment(entry.Date).format("DD-MM-YYYY");
+      // Convert Excel date serial number to JavaScript Date object
+      const date = getJsDateFromExcel(entry.Date);
 
-      // Calculate Total Time
+      // Format the date as "DD-MM-YYYY"
+      const formattedDate = formatDate(date);
+
+      // Other processing logic for Total Time, Status, etc.
+      // Calculate Total Time, determine Status, and other processing logic...
       const inTime = moment(entry["In Time"], "hh:mm A");
       const outTime = moment(entry["Out Time"], "hh:mm A");
       let totalTime = "0hrs"; // Initialize total time
       let hours = 0; // Initialize hours
 
-      // Calculate Total Time only if both inTime and outTime are valid
       if (inTime.isValid() && outTime.isValid()) {
         const duration = moment.duration(outTime.diff(inTime));
         hours = Math.floor(duration.asHours());
@@ -199,7 +200,6 @@ router.get("/admin-attendance", async function (req, res) {
         totalTime = hours + "hrs " + minutes + "mins";
       }
 
-      // Determine Status based on Total Time
       let status = "Absent";
       if (totalTime !== "0hrs") {
         status = "Present";
@@ -212,7 +212,7 @@ router.get("/admin-attendance", async function (req, res) {
       }
 
       return {
-        Date: date,
+        Date: formattedDate,
         Name: entry.Name,
         Email: entry.Email,
         "In Time": entry["In Time"],
@@ -233,6 +233,13 @@ router.get("/admin-attendance", async function (req, res) {
   }
 });
 
+// Helper function to format date as "DD-MM-YYYY"
+function formatDate(date) {
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+}
 router.get("/admin-leave", async function (req, res) {
   const userEmail = req.session.user.email;
   try {
