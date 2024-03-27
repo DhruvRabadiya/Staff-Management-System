@@ -155,17 +155,6 @@ router.get("/HOD-event", async function (req, res) {
   }
 });
 
-router.get("/HOD-Attendance", async function (req, res) {
-  const userEmail = req.session.user.email;
-
-  // Fetch H.O.D details
-  const { hodName, department, userPhoto } = await getHODDetails(userEmail);
-  res.render("hod/HOD-Attendance", {
-    hodName: hodName,
-    department: department,
-    userPhoto: userPhoto,
-  });
-});
 
 router.get("/HOD-salary", async function (req, res) {
   try {
