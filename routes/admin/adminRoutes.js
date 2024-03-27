@@ -1,5 +1,5 @@
 // routes/admin/adminRoutes.js
-const path = require("path")
+const path = require("path");
 const express = require("express");
 const { getJsDateFromExcel } = require("excel-date-to-js");
 const router = express.Router();
@@ -23,7 +23,6 @@ router.get("/admin-dashboard", async function (req, res) {
   const userEmail = req.session.user.email;
 
   try {
-    // Fetch admin data based on the email of the user
     const admin = await db
       .getDb()
       .collection("Admins")
@@ -31,19 +30,16 @@ router.get("/admin-dashboard", async function (req, res) {
 
     const adminName = admin.username;
 
-    // Query total number of achievements
     const totalAchievements = await db
       .getDb()
       .collection("Achievements")
       .estimatedDocumentCount();
 
-    // Query total number of staff members
     const staffCount = await db
       .getDb()
       .collection("Users")
       .countDocuments({ role: { $ne: "admin" } });
 
-    // Query upcoming events
     const currentDate = new Date();
     const upcomingEvents = await db
       .getDb()
@@ -51,7 +47,7 @@ router.get("/admin-dashboard", async function (req, res) {
       .find()
       .toArray();
 
-    const filteredEvents = upcomingEvents.filter(event => {
+    const filteredEvents = upcomingEvents.filter((event) => {
       const eventDate = new Date(event.date);
       return eventDate >= currentDate;
     });
@@ -68,19 +64,13 @@ router.get("/admin-dashboard", async function (req, res) {
   }
 });
 
-
 router.get("/staff-member", async function (req, res) {
   const userEmail = req.session.user.email;
 
-  // Fetch admin data based on the email of the user
   const admin = await db
     .getDb()
     .collection("Admins")
     .findOne({ email: userEmail });
-
-  // if (!user || (user.role !== "admin" && user.role !== "staff")) {
-  //   return res.status(403).render("403");
-  // }
 
   const adminName = admin.username;
   const allUsers = await db
@@ -98,13 +88,10 @@ router.get("/staff-member", async function (req, res) {
   });
 });
 
-// Add more routes for admin functionalities
-// ...
 router.get("/admin-contact", async function (req, res) {
   try {
     const userEmail = req.session.user.email;
 
-    // Fetch admin data based on the email of the user
     const admin = await db
       .getDb()
       .collection("Admins")
@@ -112,7 +99,6 @@ router.get("/admin-contact", async function (req, res) {
 
     const adminName = admin.username;
 
-    // Aggregate data from Principal, HODs, and StaffMembers collections
     const allUsers = await db
       .getDb()
       .collection("Principal")
@@ -134,14 +120,12 @@ router.get("/admin-contact", async function (req, res) {
 
 router.get("/admin-achievement", async function (req, res) {
   try {
-    // Fetch all achievements from the database
     const achievements = await db
       .getDb()
       .collection("Achievements")
       .find()
       .toArray();
 
-    // Fetch admin data based on the email of the user
     const userEmail = req.session.user.email;
     const admin = await db
       .getDb()
@@ -162,7 +146,6 @@ router.get("/admin-attendance", async function (req, res) {
   try {
     const userEmail = req.session.user.email;
 
-    // Fetch admin data based on the email of the user
     const admin = await db
       .getDb()
       .collection("Admins")
@@ -222,7 +205,6 @@ router.get("/admin-attendance", async function (req, res) {
       };
     });
 
-    // Render the attendance page with the processed data
     res.render("admin/admin-attendance", {
       attendanceData: processedData,
       adminName: adminName,
@@ -249,17 +231,14 @@ router.get("/admin-leave", async function (req, res) {
       .find()
       .toArray();
 
-    // Iterate through each leave request and fetch the corresponding user email
     for (const request of leaveRequests) {
       const userEmail = await db
         .getDb()
         .collection("StaffMembers")
-        .findOne({ email: request.email }); // Assuming email field contains the user email
+        .findOne({ email: request.email });
 
-      // Add the user email to the leave request object
       request.userEmail = userEmail;
     }
-    // Fetch admin data based on the email of the user
     const admin = await db
       .getDb()
       .collection("Admins")
@@ -279,7 +258,6 @@ router.get("/admin-leave", async function (req, res) {
 router.get("/admin-createUser", async function (req, res) {
   const userEmail = req.session.user.email;
 
-  // Fetch admin data based on the email of the user
   const admin = await db
     .getDb()
     .collection("Admins")
@@ -302,8 +280,8 @@ router.post(
       !enteredEmail ||
       !enteredRole ||
       !enteredSalary ||
-      !enteredPassword.trim() || // Trim the password
-      enteredPassword.trim().length < 6 || // Check the length after trimming
+      !enteredPassword.trim() ||
+      enteredPassword.trim().length < 6 ||
       !enteredEmail.includes("@")
     ) {
       console.log("Invalid Input- please check your data.");
@@ -350,7 +328,7 @@ router.post(
     try {
       await db.getDb().collection(DbName).insertOne(addUsers);
       await db.getDb().collection("Users").insertOne(Users);
-      res.redirect("/admin/admin-dashboard"); // Redirect to a different page if necessary
+      res.redirect("/admin/admin-dashboard");
     } catch (error) {
       console.error("Error inserting user:", error);
       res.status(500).send("Internal server error");
@@ -361,18 +339,15 @@ router.get("/admin-event", async function (req, res) {
   try {
     const userEmail = req.session.user.email;
 
-    // Fetch admin data based on the email of the user
     const admin = await db
       .getDb()
       .collection("Admins")
       .findOne({ email: userEmail });
     const adminName = admin.username;
 
-    // Fetch all upcoming events from the database
-    const eventsCursor = await db.getDb().collection("Events").find(); // Assuming you have a Mongoose model named Event
-    const events = await eventsCursor.toArray(); // Convert cursor to array
+    const eventsCursor = await db.getDb().collection("Events").find();
+    const events = await eventsCursor.toArray();
 
-    // Render the admin-events.ejs page with the fetched events
     res.render("admin/admin-event", { events: events, adminName: adminName });
   } catch (error) {
     console.error("Error fetching events:", error);
@@ -383,7 +358,6 @@ router.get("/admin-event", async function (req, res) {
 router.get("/admin-addevent", async function (req, res) {
   const userEmail = req.session.user.email;
 
-  // Fetch admin data based on the email of the user
   const admin = await db
     .getDb()
     .collection("Admins")
@@ -393,10 +367,8 @@ router.get("/admin-addevent", async function (req, res) {
 });
 router.post("/admin-addevent", async function (req, res) {
   try {
-    // Extract event details from the request body
     const { name, date, time, place, targetAudience } = req.body;
 
-    // Insert the new event into the database
     await db
       .getDb()
       .collection("Events")
@@ -413,7 +385,6 @@ router.get("/admin-department", async function (req, res) {
   try {
     const userEmail = req.session.user.email;
 
-    // Fetch admin data based on the email of the user
     const admin = await db
       .getDb()
       .collection("Admins")
@@ -421,7 +392,6 @@ router.get("/admin-department", async function (req, res) {
 
     const adminName = admin.username;
 
-    // Fetch department data from the database
     const departments = await db
       .getDb()
       .collection("Departments")
@@ -438,18 +408,15 @@ router.get("/admin-department", async function (req, res) {
   }
 });
 
-// Router
 router.get("/admin-salary", async function (req, res) {
   const userEmail = req.session.user.email;
 
   try {
-    // Fetch admin data based on the email of the user
     const admin = await db
       .getDb()
       .collection("Admins")
       .findOne({ email: userEmail });
 
-    // Aggregate salary data for all users from different collections
     const users = await db
       .getDb()
       .collection("Principal")
@@ -459,10 +426,10 @@ router.get("/admin-salary", async function (req, res) {
         {
           $project: {
             name: { $concat: ["$firstname", " ", "$lastname"] },
-            salary: { $toDouble: "$salary" }, // Convert string to number
-            role: 1, // Include the role
-            department: 1, // Include the department
-            AGP: { $literal: 5000 }, // Assumed AGP value
+            salary: { $toDouble: "$salary" },
+            role: 1,
+            department: 1,
+            AGP: { $literal: 5000 },
             DA: { $multiply: [0.1, { $toDouble: "$salary" }] }, // Calculate DA: 10% of base salary
             HRA: { $multiply: [0.05, { $toDouble: "$salary" }] }, // Calculate HRA: 5% of base salary
             otherSalary: { $multiply: [0.02, { $toDouble: "$salary" }] }, // Calculate other components: 2% of base salary
@@ -485,7 +452,5 @@ router.get("/admin-salary", async function (req, res) {
     res.status(500).send("Internal Server Error");
   }
 });
-
-
 
 module.exports = router;

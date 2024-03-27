@@ -27,7 +27,7 @@ app.use(
     store: store,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 1 day
-      secure: false, // Set to true if using HTTPS
+      secure: false,
       httpOnly: true,
     },
   })
@@ -82,10 +82,10 @@ app.post("/signup", async function (req, res) {
 
   if (
     !enteredEmail ||
-    !entredPassword.trim() || // Trim the password
-    !enteredConfirmPassword.trim() || // Trim the confirm password
-    entredPassword.trim().length < 6 || // Check the length after trimming
-    enteredConfirmPassword.trim().length < 6 || // Check the length after trimming
+    !entredPassword.trim() ||
+    !enteredConfirmPassword.trim() ||
+    entredPassword.trim().length < 6 ||
+    enteredConfirmPassword.trim().length < 6 ||
     entredPassword.trim() !== enteredConfirmPassword.trim() ||
     !enteredEmail.includes("@")
   ) {

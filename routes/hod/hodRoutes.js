@@ -2,8 +2,6 @@ const express = require("express");
 const router = express.Router();
 const db = require("../../data/database");
 const multer = require("multer");
-const bcrypt = require("bcryptjs");
-const { ObjectId } = require("mongodb");
 
 let Storege = multer.diskStorage({
   destination: "public/userImg/",
@@ -20,10 +18,8 @@ router.get("/hod-dashboard", async function (req, res) {
 });
 router.get("/HOD-staff", async function (req, res) {
   try {
-    // Fetch HOD's email from session
-    const hodEmail = req.session.user.email; // Assuming HOD's email is stored in session
+    const hodEmail = req.session.user.email;
 
-    // Fetch HOD's department based on their email
     const hod = await db
       .getDb()
       .collection("HODs")
@@ -35,7 +31,6 @@ router.get("/HOD-staff", async function (req, res) {
 
     const hodDepartment = hod.department;
 
-    // Fetch staff members associated with HOD's department
     const staffMembers = await db
       .getDb()
       .collection("StaffMembers")
@@ -50,14 +45,12 @@ router.get("/HOD-staff", async function (req, res) {
 });
 router.get("/HOD-ach", async function (req, res) {
   try {
-    // Fetch all achievements from the database
     const achievements = await db
       .getDb()
       .collection("Achievements")
       .find({})
       .toArray();
 
-    // Render the HOD-ach.ejs view with the achievements data
     res.render("hod/HOD-ach", { achievements: achievements });
   } catch (error) {
     console.error("Error fetching achievements:", error);
@@ -67,10 +60,8 @@ router.get("/HOD-ach", async function (req, res) {
 
 router.get("/HOD-event", async function (req, res) {
   try {
-    // Fetch events from the database
     const events = await db.getDb().collection("Events").find().toArray();
 
-    // Render the HOD-event.ejs page with the fetched events
     res.render("hod/HOD-event", { events: events });
   } catch (error) {
     console.error("Error fetching events:", error);
@@ -83,11 +74,9 @@ router.get("/HOD-Attendance", async function (req, res) {
 });
 
 router.get("/HOD-salary", async function (req, res) {
-
   try {
     const userEmail = req.session.user.email;
 
-    // Fetch staff member's salary details from the database
     const staffMember = await db
       .getDb()
       .collection("HODs")
@@ -112,7 +101,6 @@ router.get("/HOD-salary", async function (req, res) {
     // Calculate total salary
     const totalSalary = baseSalary + AGP + DA + HRA + otherSalary;
 
-    // Prepare the staffSalary object to pass to the view
     const staffSalary = {
       name: staffMember.firstname,
       salary: {
@@ -125,13 +113,11 @@ router.get("/HOD-salary", async function (req, res) {
       },
     };
 
-    // Render the staff-salary.ejs page with the calculated salary details
     res.render("hod/HOD-salary", { staffSalary: staffSalary });
   } catch (error) {
     console.error("Error fetching staff salary:", error);
     res.status(500).send("Internal Server Error");
   }
-
 });
 
 router.get("/HOD-profile", async function (req, res) {
@@ -259,7 +245,7 @@ router.post(
           }
         );
 
-      res.redirect("/hod/hod-dashboard"); // Redirect to a different page if necessary
+      res.redirect("/hod/hod-dashboard");
     } catch (error) {
       console.error("Error updating user profile:", error);
       res.status(500).send("Internal server error");
@@ -267,13 +253,10 @@ router.post(
   }
 );
 
-// Route to fetch leave requests for HOD
 router.get("/HOD-leave", async (req, res) => {
   try {
-    // Fetch HOD's email from session
     const hodEmail = req.session.user.email;
 
-    // Fetch HOD's department based on their email
     const hod = await db
       .getDb()
       .collection("HODs")
@@ -285,7 +268,6 @@ router.get("/HOD-leave", async (req, res) => {
 
     const hodDepartment = hod.department;
 
-    // Fetch leave requests only for HOD's department
     const leaveRequests = await db
       .getDb()
       .collection("LeaveRequests")
@@ -297,7 +279,7 @@ router.get("/HOD-leave", async (req, res) => {
       const userEmail = await db
         .getDb()
         .collection("StaffMembers")
-        .findOne({ email: request.email }); // Assuming email field contains the user email
+        .findOne({ email: request.email });
 
       // Add the user email to the leave request object
       request.userEmail = userEmail;
@@ -320,7 +302,6 @@ router.post("/HOD-leave/update-status", async (req, res) => {
     if (!email || !status) {
       throw new Error("Email or status is missing.");
     }
-
     // Ensure status is valid
     if (status !== "approved" && status !== "rejected") {
       throw new Error("Invalid status.");
@@ -345,7 +326,5 @@ router.post("/HOD-leave/update-status", async (req, res) => {
     res.status(500).send("Internal server error");
   }
 });
-
-
 
 module.exports = router;

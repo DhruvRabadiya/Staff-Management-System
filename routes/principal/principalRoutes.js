@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const db = require("../../data/database");
 const multer = require("multer");
-const bcrypt = require("bcryptjs");
 
 let Storege = multer.diskStorage({
   destination: "public/userImg/",
@@ -26,7 +25,6 @@ router.get("/Principal-Achievement", async function (req, res) {
       .find({})
       .toArray();
 
-    // Render the Principal-Achievement.ejs view with the achievements data
     res.render("principal/Principal-Achievement", {
       achievements: achievements,
     });
@@ -48,7 +46,6 @@ router.get("/principal-events", async function (req, res) {
      // Fetch events from the database
      const events = await db.getDb().collection("Events").find().toArray();
 
-     // Render the HOD-event.ejs page with the fetched events
      res.render("principal/principal-events", { events: events });
    } catch (error) {
      console.error("Error fetching events:", error);
