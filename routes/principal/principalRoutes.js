@@ -13,11 +13,71 @@ let Storege = multer.diskStorage({
 let upload = multer({
   storage: Storege,
 });
+// principalUtils.js
+
+async function getPrincipalDetails(email) {
+  try {
+    const principal = await db
+      .getDb()
+      .collection("Principal")
+      .findOne({ email: email });
+
+    if (principal) {
+      return {
+        principalName: `${principal.firstname} ${principal.lastname}`.trim(),
+        userPhoto: principal.userphoto || "" // Default to empty string if userphoto is not available
+      };
+    } else {
+      return { principalName: "Principal", userPhoto: "" };
+    }
+  } catch (error) {
+    console.error("Error fetching principal details:", error);
+    return { principalName: "Principal", userPhoto: "" };
+  }
+}
+
+
 router.get("/principal-dashboard", async function (req, res) {
-  res.render("principal/principal-dashboard");
+  try {
+    // Fetch counts of achievements, events, and leave records
+     const userEmail = req.session.user.email;
+      const { principalName, userPhoto } = await getPrincipalDetails(userEmail);
+    const achievementsCount = await db
+      .getDb()
+      .collection("Achievements")
+      .countDocuments();
+
+    // Fetch count of upcoming events
+    const currentDate = new Date().toISOString(); // Current date in ISO string format
+    const upcomingEventsCount = await db
+      .getDb()
+      .collection("Events")
+      .countDocuments({ date: { $gte: currentDate } }); // Find events with dates greater than or equal to the current date
+
+    const leaveCount = await db
+      .getDb()
+      .collection("LeaveRequests")
+      .countDocuments();
+
+    // Render the principal dashboard with the fetched data
+    res.render("principal/principal-dashboard", {
+      principalName: principalName,
+      userPhoto: userPhoto,
+      achievementsCount: achievementsCount,
+      upcomingEventsCount: upcomingEventsCount,
+      leaveCount: leaveCount,
+    });
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
+
+
 router.get("/Principal-Achievement", async function (req, res) {
   try {
+     const userEmail = req.session.user.email;
+     const { principalName, userPhoto } = await getPrincipalDetails(userEmail);
     // Fetch all achievements from the database
     const achievements = await db
       .getDb()
@@ -27,6 +87,8 @@ router.get("/Principal-Achievement", async function (req, res) {
 
     res.render("principal/Principal-Achievement", {
       achievements: achievements,
+      userPhoto: userPhoto,
+      principalName: principalName,
     });
   } catch (error) {
     console.error("Error fetching achievements:", error);
@@ -35,18 +97,34 @@ router.get("/Principal-Achievement", async function (req, res) {
 });
 
 router.get("/principal-department", async function (req, res) {
-  res.render("principal/principal-department");
+   const userEmail = req.session.user.email;
+   const { principalName, userPhoto } = await getPrincipalDetails(userEmail);
+  res.render("principal/principal-department", {
+    principalName: principalName,
+    userPhoto: userPhoto,
+  });
 });
 
 router.get("/principal-leave", async function (req, res) {
-  res.render("principal/principal-leave");
+   const userEmail = req.session.user.email;
+   const { principalName, userPhoto } = await getPrincipalDetails(userEmail);
+  res.render("principal/principal-leave", {
+    principalName: principalName,
+    userPhoto: userPhoto,
+  });
 });
 router.get("/principal-events", async function (req, res) {
    try {
+     const userEmail = req.session.user.email;
+     const { principalName, userPhoto } = await getPrincipalDetails(userEmail);
      // Fetch events from the database
      const events = await db.getDb().collection("Events").find().toArray();
 
-     res.render("principal/principal-events", { events: events });
+     res.render("principal/principal-events", {
+       events: events,
+       principalName: principalName,
+       userPhoto: userPhoto,
+     });
    } catch (error) {
      console.error("Error fetching events:", error);
    }
@@ -54,12 +132,18 @@ router.get("/principal-events", async function (req, res) {
 });
 
 router.get("/principal-salary", async function (req, res) {
-  res.render("principal/principal-salary");
+   const userEmail = req.session.user.email;
+   const { principalName, userPhoto } = await getPrincipalDetails(userEmail);
+  res.render("principal/principal-salary", {
+    principalName: principalName,
+    userPhoto: userPhoto,
+  });
 });
 
 router.get("/principal-profile", async function (req, res) {
-  try {
-    const userEmail = req.session.user.email;
+  try { const userEmail = req.session.user.email;
+  const { principalName, userPhoto } = await getPrincipalDetails(userEmail);
+    
     const user = await db
       .getDb()
       .collection("Principal")
@@ -77,6 +161,8 @@ router.get("/principal-profile", async function (req, res) {
     res.render("principal/principal-profile", {
       user: user,
       department: department,
+      userPhoto: userPhoto,
+      principalName: principalName,
     });
   } catch (error) {
     console.error("Error fetching user details:", error);
@@ -84,7 +170,12 @@ router.get("/principal-profile", async function (req, res) {
   }
 });
 router.get("/principal-updprof", async function (req, res) {
-  res.render("principal/principal-updprof");
+   const userEmail = req.session.user.email;
+   const { principalName, userPhoto } = await getPrincipalDetails(userEmail);
+  res.render("principal/principal-updprof", {
+    principalName: principalName,
+    userPhoto: userPhoto,
+  });
 });
 
 
