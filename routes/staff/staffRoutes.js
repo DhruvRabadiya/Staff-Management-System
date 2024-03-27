@@ -67,8 +67,7 @@ router.get("/staff-dashboard", async function (req, res) {
     const latestAchievement = await db
       .getDb()
       .collection("Achievements")
-      .findOne({ email: userEmail }, {}, { sort: { createdAt: -1 } });
-
+      .countDocuments({ email: userEmail });
     // Fetch current leave request
     const currentLeaveRequest = await db
       .getDb()
@@ -253,7 +252,8 @@ router.post(
       const certificate = req.file.filename;
 
       const achievement = {
-        name: staffMember.firstname, 
+        name: staffMember.firstname,
+        email: email,
         title: title,
         date: date,
         description: description,

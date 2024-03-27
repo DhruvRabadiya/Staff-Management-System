@@ -15,9 +15,10 @@
           <!-- Render staff member's own achievements -->
           <div class="Achievement">
             <div class="Ach-img">
-              <img src="/public/achievement/<%= achievement.certificate %>" />
+              <img src="/achievement/<%= achievement.certificate %>" />
             </div>
             <div class="Ach-p">
+               <p><%= achievement.name %></p>
               <p><%= achievement.date %></p>
               <p><%= achievement.title %></p>
               <p><%= achievement.description %></p>
