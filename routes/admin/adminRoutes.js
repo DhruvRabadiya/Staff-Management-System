@@ -385,14 +385,23 @@ router.get("/admin-addevent", async function (req, res) {
   const adminName = admin.username;
   res.render("admin/admin-addevent", { adminName: adminName });
 });
+
 router.post("/admin-addevent", async function (req, res) {
   try {
-    const { name, date, time, place, targetAudience } = req.body;
+    const { name, coordinator, contact, date, time, place, targetAudience } = req.body;
 
     await db
       .getDb()
       .collection("Events")
-      .insertOne({ name, date, time, place, targetAudience });
+      .insertOne({
+        name,
+        coordinator,
+        contact,
+        date,
+        time,
+        place,
+        targetAudience,
+      });
 
     res.redirect("/admin/admin-event");
   } catch (error) {
