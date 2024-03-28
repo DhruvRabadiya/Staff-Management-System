@@ -14,9 +14,11 @@
         <div class="container">
           <div class="tablecontent">
             <div class="tablecontent">
-                    <table>
+                     <table>
                         <tr>
-                            <th>NAME</th>
+                            <th>EVENT NAME</th>
+                            <th>Coordinator Name</th>
+                            <th>Contact No.</th>
                             <th>Date</th>
                             <th>Time</th>
                             <th>Place</th>
@@ -24,7 +26,10 @@
                         </tr>
                         <% events.forEach(event => { %>
                         <tr>
+                            
                             <td><%= event.name %></td>
+                            <td><%= event.coordinator %></td>
+                            <td><%= event.contact %></td>
                             <td><%= event.date %></td>
                             <td><%= event.time %></td>
                             <td><%= event.place %></td>

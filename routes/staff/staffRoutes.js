@@ -411,7 +411,7 @@ router.get("/staff-leave", async function (req, res) {
     const currentLeaves = await db
       .getDb()
       .collection("LeaveRequests")
-      .find({email:userEmail}) // Assuming "Pending" status indicates current leaves
+      .find({email:userEmail}) 
       .toArray();
     
     res.render("staff/staff-leave", {
