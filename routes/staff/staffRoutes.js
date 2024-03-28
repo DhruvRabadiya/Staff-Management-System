@@ -426,19 +426,30 @@ router.get("/staff-leave", async function (req, res) {
   }
 });
 
-
 router.get("/staff-leaveapply", async (req, res) => {
   try {
-   const userEmail = req.session.user.email;
+    const userEmail = req.session.user.email;
 
-   const { staffName, userPhoto } = await getStaffDetails(userEmail);
+    const { staffName, userPhoto } = await getStaffDetails(userEmail);
+
     if (!req.session || !req.session.user || !req.session.user.email) {
       return res.status(401).send("Unauthorized");
     }
 
+    // Logic to calculate leaves left
+    const totalLeaves = 15; // Total leaves allowed
+    const usedLeaves = await db
+      .getDb()
+      .collection("LeaveRequests")
+      .countDocuments({ email: userEmail });
+    const leavesLeft = totalLeaves - usedLeaves;
 
-
-    res.render("staff/staff-leaveapply", { userEmail, staffName, userPhoto });
+    res.render("staff/staff-leaveapply", {
+      userEmail,
+      staffName,
+      userPhoto,
+      leavesLeft,
+    });
   } catch (error) {
     console.error("Error rendering leave application form:", error);
     res.status(500).send("Internal server error");
@@ -450,28 +461,42 @@ router.post("/staff-leaveapply", async (req, res) => {
   const userEmail = req.session.user.email;
 
   try {
-   const dept = await db
-     .getDb()
-     .collection("StaffMembers")
-     .findOne({ email: userEmail });
+    // Check the total number of leave requests for the staff member
+    const leaveCount = await db
+      .getDb()
+      .collection("LeaveRequests")
+      .countDocuments({ email: userEmail });
 
-    await db.getDb().collection("LeaveRequests").insertOne({
-      email: userEmail,
-      title: title,
-      fromDate: fromDate,
-      toDate: toDate,
+    // If the total leave count is less than 15, allow the leave application
+    if (leaveCount <= 15) {
+      const dept = await db
+        .getDb()
+        .collection("StaffMembers")
+        .findOne({ email: userEmail });
 
-      leaveType: leaveType,
-      status: "pending",
-      department: dept.department,
-    });
+      await db.getDb().collection("LeaveRequests").insertOne({
+        email: userEmail,
+        title: title,
+        fromDate: fromDate,
+        toDate: toDate,
+        leaveType: leaveType,
+        status: "pending",
+        department: dept.department,
+      });
 
-    res.redirect("/staff/staff-dashboard"); 
+      res.redirect("/staff/staff-dashboard");
+    } else {
+      // If the staff member has already applied for 15 leaves, display an error message
+      res
+        .status(400)
+        .send("You have already applied for the maximum number of leaves.");
+    }
   } catch (error) {
     console.error("Error submitting leave request:", error);
     res.status(500).send("Internal server error");
   }
 });
+
 
 
 module.exports = router;
