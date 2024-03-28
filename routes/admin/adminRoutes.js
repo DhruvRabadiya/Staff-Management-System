@@ -88,6 +88,26 @@ router.get("/staff-member", async function (req, res) {
   });
 });
 
+const { ObjectId } = require("mongodb");
+router.post("/staff-member/delete/:userId", async function (req, res) {
+  try {
+    const userId = req.params.userId;
+    console.log(userId);
+
+    // Delete the staff member with the provided user ID
+    // Example: Deletion operation for StaffMembers collection
+    await db
+      .getDb()
+      .collection("StaffMembers")
+      .deleteOne({ _id: new ObjectId(userId) });
+
+    // Redirect to the staff members page after successful deletion
+    res.redirect("/admin/staff-member");
+  } catch (error) {
+    console.error("Error deleting staff member:", error);
+    res.status(500).send("Internal server error");
+  }
+});
 router.get("/admin-contact", async function (req, res) {
   try {
     const userEmail = req.session.user.email;
