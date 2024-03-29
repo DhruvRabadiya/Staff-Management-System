@@ -13,7 +13,7 @@
 }
 .container {
   border: 2px;
-  margin: 100px auto;
+  margin: 120px auto;
   height: auto;
 }
 table {
@@ -36,4 +36,5 @@ td {
   border-right: 2px solid white;
   border-bottom: 2px solid white;
   padding: 10px;
+  text-align: center;
 }

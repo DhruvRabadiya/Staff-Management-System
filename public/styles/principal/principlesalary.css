@@ -21,13 +21,14 @@ th{
     height: 6vh;
     border: 2px solid white;
 }
-#same{
+/* #same{
     padding-left: 50px;
-}
+} */
 td{
     border-collapse: collapse;
     border-left: 2px solid white;
     border-right: 2px solid white;
     border-bottom: 2px solid white;
     padding: 10px;
+    text-align: center;
 }

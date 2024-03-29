@@ -16,13 +16,13 @@
     height: auto;
 }
 .top-container{
-    margin:20px 20px ;
+    margin:20px 35px ;
     display: flex;
 }
 .container1{
     background-color: rgba(27, 37, 55, 1);
-    height: 20vh;
-    width: 20vw;
+    height: 30vh;
+    width: 23vw;
 }
 .container1 p{
     font-size: 50px;
@@ -34,22 +34,22 @@ h3{
 .container2{
     background-color: rgba(27, 37, 55, 1);
     margin-left: 1vw;
-    height: 20vh;
-    width: 20vw;
+    height: 30vh;
+    width: 23vw;
 }
 .container3{
     background-color: rgba(27, 37, 55, 1);
     margin-left: 1vw;
-    height: 20vh;
-    width: 20vw;
+    height: 30vh;
+    width: 23vw;
 }
 .container2 p{
     font-size: 50px;
     margin: 2px;
 }
-.container3 p{
-    font-size: 50px;
-    margin: 5px;
+.container3 ul{
+    font-size: 15px;
+  margin-left: 20px;
 }
 .middle-container{
     display: flex;

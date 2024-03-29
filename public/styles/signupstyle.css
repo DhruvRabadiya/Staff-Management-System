@@ -8,6 +8,7 @@ body {
 .container {
   margin: 100px auto;
   width: 50vw;
+  height: 30vw;
   color: white;
   background-image: linear-gradient(
     60deg,

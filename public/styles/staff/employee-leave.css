@@ -24,6 +24,7 @@ td {
     border-right: 1px solid white;
     border-bottom: 1px solid white;
     padding: 10px;
+    text-align: center;
 }
 
 .bottom {
@@ -41,7 +42,7 @@ td {
     width: 150px;
     height: 20px;
     margin-top: 80px;
-    margin-left: 770px;
+    margin-left: 970px;
 }
 .leavebtn a{
     margin-right: 7px;

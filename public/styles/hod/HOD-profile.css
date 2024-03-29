@@ -24,6 +24,7 @@ td {
     border-right: 1px solid white;
     border-bottom: 1px solid white;
     padding: 10px;
+    text-align: center;
 }
 .bottom {
     background-color: rgba(56, 59, 139, 1);

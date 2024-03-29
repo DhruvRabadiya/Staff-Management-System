@@ -20,11 +20,11 @@ body{
     font-size: 25px;
     color: white;
     margin-left: 5px;
-    margin-top: 25px;
+    margin-top: 15px;
 }
 
 .header input {
-    margin-top: 20px;
+    margin-top: 10px;
     margin-left: 10px;
     height: 30px;
     color: white;
@@ -34,11 +34,20 @@ body{
 .heading {
     margin: 40px 10px auto;
 }
-.heading-but{
-    margin-top: 40px;
-    margin-left: 680px;
+.heading-but button{
+    margin-top: 30px;
+    color: white;
+    margin-left: 1000px;
+    width: 100px;
+    height: 30px;
+    border-radius: 10px;
+    background-color: #1C2438;
+    border-color: rgb(255, 255, 255);
+    opacity: 0.5;
 }
-
+.heading-but button:hover{
+    opacity: 1;
+}
 .heading p {
     color: green;
 }

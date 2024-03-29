@@ -6,7 +6,7 @@
     display: flex;
 }
 .heading img{
-    margin-left: 225px;
+    margin-left: 150%;
     height: 200px;
     width: 200px;
 }
@@ -20,11 +20,11 @@
 #address{
     width: auto;
 }
-.container input {
+.container p{
     margin-top: 30px;
-    margin-left: 22px;
+    margin-left: 13%;
     height: 30px;
-    width: 440px;
+    width: 60vw;
     color: white;
     background-color: #1C2438;
 }
@@ -36,7 +36,7 @@
     width: 168px;
     height: 20px;
     margin-top: 80px;
-    margin-left: 740px;
+    margin-left: 900px;
 }
 .leavebtn a{
     margin-right: 7px;
