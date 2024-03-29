@@ -18,10 +18,10 @@
               <img src="/achievement/<%= achievement.certificate %>" />
             </div>
             <div class="Ach-p">
-               <p><%= achievement.name %></p>
-              <p><%= achievement.date %></p>
-              <p><%= achievement.title %></p>
-              <p><%= achievement.description %></p>
+              <p>Name:  <%= achievement.name %></p>
+              <p>Title:  <%= achievement.title %></p>
+               <p>Date:  <%= achievement.date %></p>
+              <p>Description:  <%= achievement.description %></p>
             </div>
           </div>
         <% }) %>
@@ -33,15 +33,10 @@
               <img src="/achievement/<%= achievement.certificate %>" />
             </div>
             <div class="Ach-p">
-              <p>Name: </p>
-              <p><%= achievement.name %></p>
-              <p>Title: </p>
-              <p><%= achievement.title %></p>
-               <p>Date: </p>
-              <p><%= achievement.date %></p>
-              <p>Description: </p>
-              <p><%= achievement.description %></p>
-            </div>
+              <p>Name: <%= achievement.name %></p>
+              <p>Title: <%= achievement.title %></p>
+               <p>Date: <%= achievement.date %></p>
+              <p>Description: <%= achievement.description %></p>
           </div>
         <% }) %>
 
